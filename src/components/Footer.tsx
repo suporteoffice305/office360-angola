@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
-            <h3 className="text-xl font-bold text-darkblue mb-4">Office360</h3>
+            <h3 className="text-xl font-bold text-darkblue mb-4">Office350</h3>
             <p className="text-gray-600">
               Sua parceira confiável em licenciamento de software Microsoft para empresas de todos os tamanhos.
             </p>
@@ -39,7 +39,7 @@ const Footer = () => {
             <div className="flex items-center mb-3">
               <Phone size={18} className="text-darkblue mr-2" />
               <a href="tel:+244958252301" className="text-gray-600 hover:text-darkblue">
-                +244 958 252 301
+                +244 923 101 076
               </a>
             </div>
             <div className="flex space-x-4 mt-4">
@@ -54,7 +54,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-200 mt-12 pt-8 text-center text-gray-600">
-          <p>&copy; {new Date().getFullYear()} Office360. Todos os direitos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Office365. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>

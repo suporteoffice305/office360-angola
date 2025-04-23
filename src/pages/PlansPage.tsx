@@ -19,45 +19,6 @@ const PlansPage = () => {
         'Reuniões online com até 300 pessoas',
         'Suporte 24/7'
       ]
-    },
-    {
-      id: 'office365apps',
-      name: 'Office 365 Apps for Business',
-      price: 55000,
-      features: [
-        'Versões desktop completas do Office',
-        'Cada usuário pode instalar em 5 dispositivos',
-        '1 TB de armazenamento na nuvem',
-        'Atualizações sempre incluídas',
-        'Suporte 24/7'
-      ]
-    },
-    {
-      id: 'office365premium',
-      name: 'Office 365 Business Premium',
-      price: 65000,
-      featured: true,
-      features: [
-        'Tudo do Business Basic',
-        'Versões desktop completas do Office',
-        'Email corporativo avançado',
-        'Segurança e conformidade avançadas',
-        'Gerenciamento de dispositivos',
-        'Suporte prioritário 24/7'
-      ]
-    },
-    {
-      id: 'office365enterprise',
-      name: 'Office 365 Enterprise E3',
-      price: 85000,
-      features: [
-        'Tudo do Business Premium',
-        'Recursos de conformidade avançados',
-        'Analytics e insights avançados',
-        'Gerenciamento de segurança avançado',
-        'Retenção legal e proteção contra ameaças',
-        'Suporte telefônico 24/7'
-      ]
     }
   ];
 

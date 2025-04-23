@@ -47,7 +47,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="text-2xl font-bold text-darkblue">Office360</Link>
+            <Link to="/" className="text-2xl font-bold text-darkblue">Office365</Link>
           </div>
 
           {/* Desktop Navigation */}

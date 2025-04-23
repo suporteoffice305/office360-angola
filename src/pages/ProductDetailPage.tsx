@@ -42,32 +42,59 @@ const productsData: Product[] = [
       'Espaço em disco: 20 GB',
       'Placa gráfica: DirectX 9 ou posterior'
     ],
-    price: 45000,
-    image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    price: 10000,
+    image: '/win10.png',
+    icon: <FileText size={28} />
+  },
+  {
+    id: 'windowsserver',
+    name: 'Windows Server 2012 / 2019 / 2022 / 2025',
+    description: 'Licença para Windows Server: soluções robustas para servidores empresariais.',
+    longDescription: 'O Windows Server (2012, 2019, 2022, 2025) oferece uma plataforma confiável e escalável para infraestrutura de TI, virtualização, gerenciamento de servidores, armazenamento e segurança. Ideal para empresas que precisam de desempenho, disponibilidade e recursos avançados de rede.',
+    features: [
+      'Licença perpétua (uso permanente)',
+      'Virtualização avançada com Hyper-V',
+      'Gerenciamento centralizado de servidores',
+      'Recursos de alta disponibilidade e failover',
+      'Active Directory e gerenciamento de identidades',
+      'Suporte a containers e integração com Azure',
+      'Instalação local (on-premises)'
+    ],
+    requirements: [
+      'Processador: 64-bit, Intel ou AMD',
+      'RAM: mínimo de 2 GB (recomendado 16 GB ou mais)',
+      'Espaço em disco: mínimo de 32 GB',
+      'Placa de rede compatível',
+      'Firmware: UEFI, compatível com Secure Boot'
+    ],
+    price: 150000,
+    image: '/server.png',
     icon: <FileText size={28} />
   },
   {
     id: 'windows11pro',
-    name: 'Windows 11 Pro',
-    description: 'Interface moderna e recursos de produtividade aprimorados para sua empresa.',
-    longDescription: 'O Windows 11 Pro traz uma experiência completamente renovada, com interface centrada na produtividade. Desfrute de todos os recursos de segurança e gerenciamento do Windows 10 Pro, além de melhorias significativas na experiência do usuário e na integração com o Microsoft 365.',
+    name: 'Exchange Server 2019',
+    description: 'Solução robusta de e-mail corporativo, calendário e contatos para empresas.',
+    longDescription: 'O Exchange Server 2019 oferece uma plataforma segura, confiável e escalável para gerenciamento de e-mails, calendários e contatos empresariais. Ideal para organizações que buscam controle total sobre sua infraestrutura de comunicação, com recursos avançados de segurança, alta disponibilidade e integração com o Active Directory.',
     features: [
-      'Licença perpétua (uso permanente)',
-      'Design moderno e intuitivo',
-      'Windows Hello avançado',
-      'Compatibilidade aprimorada com Microsoft Teams',
-      'Proteção avançada contra ameaças',
-      'Instalação permitida em 1 dispositivo'
+      'Gerenciamento avançado de e-mails, calendários e contatos',
+      'Alta disponibilidade e recuperação de desastres',
+      'Integração com Active Directory',
+      'Suporte a dispositivos móveis e acesso via web (OWA)',
+      'Recursos de compliance e arquivamento',
+      'Proteção contra spam e malware',
+      'Instalação local (on-premises)'
     ],
     requirements: [
-      'Processador: 1 GHz com 2 ou mais núcleos',
-      'RAM: 4 GB',
-      'Espaço em disco: 64 GB',
-      'Firmware: UEFI, compatível com Secure Boot',
-      'TPM: Versão 2.0'
+      'Processador: 64-bit, Intel ou AMD',
+      'RAM: mínimo de 128 GB para Mailbox Role',
+      'Espaço em disco: mínimo de 30 GB para instalação',
+      'Windows Server 2019 Standard ou Datacenter',
+      'Active Directory no Windows Server 2012 R2 ou superior',
+      'Conexão de rede confiável'
     ],
-    price: 55000,
-    image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    price: 850000,
+    image: '/exchange.png',
     icon: <FileText size={28} />
   },
   {
@@ -89,32 +116,7 @@ const productsData: Product[] = [
       'Sistema operacional: Windows 10 ou superior, macOS, iOS ou Android'
     ],
     price: 45000,
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    icon: <Star size={28} />
-  },
-  {
-    id: 'office365premium',
-    name: 'Office 365 Business Premium',
-    description: 'Soluções avançadas de e-mail, videoconferência e gerenciamento para sua equipe.',
-    longDescription: 'O Microsoft 365 Business Premium é a solução completa para empresas que precisam de aplicativos Office completos, email empresarial, armazenamento em nuvem e segurança avançada. Inclui recursos de proteção contra ameaças cibernéticas e ferramentas de gerenciamento de dispositivos.',
-    features: [
-      'Versões desktop completas do Word, Excel, PowerPoint e Outlook',
-      'Email empresarial avançado com 50 GB por usuário',
-      '1 TB de armazenamento no OneDrive por usuário',
-      'Microsoft Teams avançado para colaboração',
-      'Intune e Azure Information Protection',
-      'Defender para Office 365',
-      'Suporte técnico prioritário 24/7'
-    ],
-    requirements: [
-      'PC: Windows 10 ou superior',
-      'Mac: três versões mais recentes do macOS',
-      '1 GB de RAM (32 bits) ou 2 GB de RAM (64 bits)',
-      '3 GB de espaço disponível em disco',
-      'Conexão com a internet'
-    ],
-    price: 65000,
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    image: '/office.png',
     icon: <Star size={28} />
   }
 ];

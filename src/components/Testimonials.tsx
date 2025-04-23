@@ -14,27 +14,27 @@ const Testimonials = () => {
   const testimonials: Testimonial[] = [
     {
       id: 1,
-      name: 'Carlos Mendes',
+      name: 'Manuel Domingos',
       position: 'CEO',
-      company: 'TechSolutions',
+      company: 'SoftAngola',
       text: 'A Office360 superou nossas expectativas. O processo de compra foi simples, rápido e o suporte técnico é excepcional. Recomendo para todas as empresas que precisam de licenças Microsoft.',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+      image: '/homem.png'
     },
     {
       id: 2,
-      name: 'Ana Pereira',
+      name: 'Maria João',
       position: 'Diretora de TI',
-      company: 'Grupo Finance',
+      company: 'Kixico Digital',
       text: 'Economizamos tempo e dinheiro com as licenças da Office360. Ativação instantânea e zero problemas com compatibilidade ou atualizações. Um parceiro de negócios confiável!',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+      image: '/mulher.png'
     },
     {
       id: 3,
-      name: 'Roberto Santos',
+      name: 'Joaquim Chissano',
       position: 'Gerente de Operações',
-      company: 'Logística Express',
-      text: 'A migração para o Windows 11 Pro através da Office360 foi tranquila e sem interrupções. O suporte pós-venda é um diferencial que nos faz cliente fiel há mais de 3 anos.',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+      company: 'Nova Rede',
+      text: 'A migração para o Windows Server através da Office360 foi tranquila e sem interrupções. O suporte pós-venda é um diferencial que nos faz cliente fiel há mais de 3 anos.',
+      image: '/homem.png'
     }
   ];
 

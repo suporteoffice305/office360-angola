@@ -75,24 +75,24 @@ const AboutPage = () => {
                   
                   <div className="bg-white rounded-lg overflow-hidden shadow-md">
                     <img 
-                      src="/lovable-uploads/bfef59fc-d877-4bf0-b03b-724a4b48b878.png"
+                      src="/lovable-uploads/francisco.png"
                       alt="Membro da equipe" 
                       className="w-full h-auto aspect-[3/4] object-cover"
                     />
                     <div className="p-6">
-                      <h3 className="text-xl font-semibold text-darkblue">Carlos Mendes</h3>
+                      <h3 className="text-xl font-semibold text-darkblue">Francisco Jamba</h3>
                       <p className="text-gray-600">Especialista em Licenciamento</p>
                     </div>
                   </div>
                   
                   <div className="bg-white rounded-lg overflow-hidden shadow-md">
                     <img 
-                      src="/lovable-uploads/8d983a1a-eec6-487c-88be-efec0c2f85e1.png" 
+                      src="/lovable-uploads/dev.png" 
                       alt="Membro da equipe" 
                       className="w-full h-auto aspect-[3/4] object-cover"
                     />
                     <div className="p-6">
-                      <h3 className="text-xl font-semibold text-darkblue">Sofia Costa</h3>
+                      <h3 className="text-xl font-semibold text-darkblue">João Augusto</h3>
                       <p className="text-gray-600">Suporte Técnico</p>
                     </div>
                   </div>
