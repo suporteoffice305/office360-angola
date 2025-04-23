@@ -1,161 +1,101 @@
-
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { CartProvider } from '@/hooks/useCart';
+import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Trash2, Plus, Minus, CreditCard } from 'lucide-react';
-import { useCart, CartProvider } from '@/hooks/useCart';
+import { Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// Create a separate component that uses the useCart hook
-// This component will be rendered as a child of CartProvider
-const CartContents = () => {
-  const { items, updateQuantity, updateUsers, removeFromCart, getTotalPrice } = useCart();
-
-  if (items.length === 0) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-grow py-16">
-          <div className="container">
-            <div className="max-w-4xl mx-auto text-center space-y-6">
-              <h1 className="text-3xl font-bold text-darkblue">Seu Carrinho está Vazio</h1>
-              <p className="text-gray-600">
-                Adicione alguns produtos ao seu carrinho para continuar.
-              </p>
-              <Button className="bg-darkblue hover:bg-blue-800" asChild>
-                <Link to="/planos">Ver Planos Disponíveis</Link>
-              </Button>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+const CartContent = () => {
+  const { items, removeFromCart, updateQuantity, updateUsers, getTotalPrice } = useCart();
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow py-16">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h1 className="text-3xl font-bold text-darkblue mb-8">Carrinho de Compras</h1>
+          <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+            <h1 className="text-2xl font-bold text-darkblue mb-6">Seu Carrinho</h1>
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="p-6">
-                    <table className="w-full">
-                      <thead className="border-b border-gray-200">
-                        <tr>
-                          <th className="text-left py-3 text-gray-600">Produto</th>
-                          <th className="text-center py-3 text-gray-600">Usuários</th>
-                          <th className="text-center py-3 text-gray-600">Quantidade</th>
-                          <th className="text-right py-3 text-gray-600">Preço</th>
-                          <th className="py-3"></th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {items.map((item) => (
-                          <tr key={item.id} className="hover:bg-gray-50">
-                            <td className="py-4 pr-4">
-                              <div className="font-medium text-darkblue">{item.name}</div>
-                            </td>
-                            <td className="py-4">
-                              <div className="flex items-center justify-center">
-                                <button 
-                                  className="p-1 rounded-full hover:bg-gray-200"
-                                  onClick={() => updateUsers(item.id, Math.max(1, item.users - 1))}
-                                >
-                                  <Minus className="h-4 w-4 text-gray-600" />
-                                </button>
-                                <span className="mx-2 w-10 text-center">{item.users}</span>
-                                <button 
-                                  className="p-1 rounded-full hover:bg-gray-200"
-                                  onClick={() => updateUsers(item.id, item.users + 1)}
-                                >
-                                  <Plus className="h-4 w-4 text-gray-600" />
-                                </button>
-                              </div>
-                            </td>
-                            <td className="py-4">
-                              <div className="flex items-center justify-center">
-                                <button 
-                                  className="p-1 rounded-full hover:bg-gray-200"
-                                  onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                >
-                                  <Minus className="h-4 w-4 text-gray-600" />
-                                </button>
-                                <span className="mx-2 w-8 text-center">{item.quantity}</span>
-                                <button 
-                                  className="p-1 rounded-full hover:bg-gray-200"
-                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                >
-                                  <Plus className="h-4 w-4 text-gray-600" />
-                                </button>
-                              </div>
-                            </td>
-                            <td className="py-4 text-right">
-                              <div className="font-medium">{(item.price * item.quantity).toLocaleString('pt-AO')} Kz</div>
-                            </td>
-                            <td className="py-4 pl-4 text-right">
-                              <button 
-                                className="p-1 rounded-full hover:bg-gray-200 text-red-500"
-                                onClick={() => removeFromCart(item.id)}
-                              >
-                                <Trash2 className="h-5 w-5" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+            {items.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600 mb-6">Seu carrinho está vazio.</p>
+                <Button asChild className="bg-darkblue hover:bg-blue-800">
+                  <Link to="/planos">Ver Planos Disponíveis</Link>
+                </Button>
               </div>
-              
-              <div className="lg:col-span-1">
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="p-6 space-y-4">
-                    <h2 className="text-xl font-bold text-darkblue border-b border-gray-200 pb-4">Resumo do Pedido</h2>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Subtotal</span>
-                        <span className="font-medium">{getTotalPrice().toLocaleString('pt-AO')} Kz</span>
-                      </div>
-                      
-                      <div className="pt-2">
-                        <div className="flex">
-                          <Input 
-                            placeholder="Código de cupom" 
-                            className="rounded-r-none"
-                          />
-                          <Button variant="outline" className="rounded-l-none border-l-0">
-                            Aplicar
-                          </Button>
+            ) : (
+              <>
+                <div className="space-y-6">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex flex-col md:flex-row justify-between border-b pb-6">
+                      <div className="flex-grow mb-4 md:mb-0">
+                        <h3 className="font-medium text-lg">{item.name}</h3>
+                        <div className="flex items-center mt-2 space-x-4">
+                          <div>
+                            <label htmlFor={`quantity-${item.id}`} className="block text-sm text-gray-600 mb-1">
+                              Quantidade
+                            </label>
+                            <input
+                              id={`quantity-${item.id}`}
+                              type="number"
+                              min="1"
+                              value={item.quantity}
+                              onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
+                              className="w-20 border rounded p-1 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label htmlFor={`users-${item.id}`} className="block text-sm text-gray-600 mb-1">
+                              Usuários
+                            </label>
+                            <input
+                              id={`users-${item.id}`}
+                              type="number"
+                              min="1"
+                              value={item.users}
+                              onChange={(e) => updateUsers(item.id, parseInt(e.target.value))}
+                              className="w-20 border rounded p-1 text-sm"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="border-t border-gray-200 pt-4 mt-4">
-                      <div className="flex justify-between mb-4">
-                        <span className="text-lg font-bold text-darkblue">Total</span>
-                        <span className="text-lg font-bold text-darkblue">{getTotalPrice().toLocaleString('pt-AO')} Kz</span>
+                      <div className="flex flex-col items-end">
+                        <span className="font-bold text-lg text-darkblue">
+                          {(item.price * item.quantity).toLocaleString('pt-AO')} Kz
+                        </span>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="flex items-center text-red-500 hover:text-red-700 mt-2"
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          <span className="text-sm">Remover</span>
+                        </button>
                       </div>
-                      
-                      <Button className="w-full bg-darkblue hover:bg-blue-800" size="lg" asChild>
-                        <Link to="/pagamento">
-                          <CreditCard className="mr-2 h-5 w-5" /> Finalizar Compra
-                        </Link>
-                      </Button>
                     </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 border-t pt-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <span className="text-lg font-medium">Total</span>
+                    <span className="text-2xl font-bold text-darkblue">
+                      {getTotalPrice().toLocaleString('pt-AO')} Kz
+                    </span>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button asChild variant="outline" className="flex-1">
+                      <Link to="/planos">Continuar Comprando</Link>
+                    </Button>
+                    <Button asChild className="flex-1 bg-darkblue hover:bg-blue-800">
+                      <Link to="/pagamento">Finalizar Compra</Link>
+                    </Button>
                   </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </main>
@@ -164,13 +104,14 @@ const CartContents = () => {
   );
 };
 
-// Main CartPage component that wraps CartContents with CartProvider
-const CartPage = () => {
-  return (
-    <CartProvider>
-      <CartContents />
-    </CartProvider>
-  );
-};
+/**
+ * ⚠️ MUITO IMPORTANTE: 
+ * TODA A ÁRVORE DE COMPONENTES PRECISA ESTAR DENTRO DO CartProvider para evitar o erro "useCart must be used within a CartProvider".
+ */
+const CartPage = () => (
+  <CartProvider>
+    <CartContent />
+  </CartProvider>
+);
 
 export default CartPage;

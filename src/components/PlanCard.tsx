@@ -53,7 +53,7 @@ const PlanCard = ({ plan }: PlanProps) => {
   return (
     <Card className={`flex flex-col ${plan.featured ? 'border-darkblue border-2 shadow-lg' : ''}`}>
       {plan.featured && (
-        <div className="bg-darkblue text-white py-2 text-center text-sm font-medium">
+        <div className="bg-darkblue text-white py-2 text-center text-sm font-medium rounded-t-lg">
           Mais Popular
         </div>
       )}
@@ -100,8 +100,12 @@ const PlanCard = ({ plan }: PlanProps) => {
               {(plan.price * users).toLocaleString('pt-AO')} Kz
             </span>
           </div>
-          <Button className="w-full bg-darkblue hover:bg-blue-800" onClick={handleAddToCart}>
-            <ShoppingCart className="mr-2 h-4 w-4" /> Adicionar ao Carrinho
+          <Button
+            className="w-full bg-darkblue hover:bg-blue-800 text-white rounded-md px-0 py-3 h-12 transition-all focus:ring-2 focus:ring-offset-2 focus:ring-darkblue font-bold tracking-wider"
+            style={{ borderRadius: 8, minHeight: 48 }}
+            onClick={handleAddToCart}
+          >
+            <ShoppingCart className="mr-2 h-5 w-5" /> Adicionar ao Carrinho
           </Button>
         </div>
       </CardFooter>
