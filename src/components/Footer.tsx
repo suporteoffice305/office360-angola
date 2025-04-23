@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
-            <h3 className="text-xl font-bold text-darkblue mb-4">Office350</h3>
+            <h3 className="text-xl font-bold text-darkblue mb-4">Office360</h3>
             <p className="text-gray-600">
               Sua parceira confiável em licenciamento de software Microsoft para empresas de todos os tamanhos.
             </p>
@@ -19,7 +19,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><a href="#" className="text-gray-600 hover:text-darkblue">Home</a></li>
               <li><a href="#" className="text-gray-600 hover:text-darkblue">Licenças Windows</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-darkblue">Office 365</a></li>
+              <li><a href="#" className="text-gray-600 hover:text-darkblue">Office 360</a></li>
               <li><a href="#" className="text-gray-600 hover:text-darkblue">Suporte</a></li>
             </ul>
           </div>
