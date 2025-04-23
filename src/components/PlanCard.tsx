@@ -14,6 +14,13 @@ import { Input } from '@/components/ui/input';
 import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/hooks/use-toast';
 
+/**
+ * Card de plano individual.
+ * - Aceita objeto de plano (id, nome, preço, features, destaque)
+ * - Permite selecionar número de usuários (mínimo: 1)
+ * - Botão ocupa sempre todo o espaço e é quadrado, responsivo
+ * - Integração total com carrinho
+ */
 interface PlanProps {
   plan: {
     id: string;
@@ -29,6 +36,7 @@ const PlanCard = ({ plan }: PlanProps) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
 
+  // Handler para adicionar ao carrinho
   const handleAddToCart = () => {
     addToCart({
       id: plan.id,
@@ -36,22 +44,21 @@ const PlanCard = ({ plan }: PlanProps) => {
       price: plan.price * users,
       users
     }, 1);
-    
     toast({
       title: "Adicionado ao carrinho",
       description: `${plan.name} para ${users} usuário${users > 1 ? 's' : ''} adicionado.`,
     });
   };
 
+  // Handler do input do número de usuários
   const handleUsersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    if (value > 0) {
-      setUsers(value);
-    }
+    if (value > 0) setUsers(value);
   };
 
   return (
     <Card className={`flex flex-col h-full ${plan.featured ? 'border-darkblue border-2 shadow-lg' : ''}`}>
+      {/* Destaque para plano popular */}
       {plan.featured && (
         <div className="bg-darkblue text-white py-2 text-center text-sm font-medium rounded-t-lg">
           Mais Popular
@@ -79,6 +86,7 @@ const PlanCard = ({ plan }: PlanProps) => {
           ))}
         </ul>
       </CardContent>
+      {/* Parte inferior fixa, botão sempre alinhado e quadrado */}
       <CardFooter className="flex flex-col space-y-4 pt-4">
         <div className="w-full">
           <label htmlFor={`users-${plan.id}`} className="block text-sm font-medium text-gray-700 mb-1">
@@ -101,8 +109,9 @@ const PlanCard = ({ plan }: PlanProps) => {
             </span>
           </div>
           <Button
-            className="w-full bg-darkblue hover:bg-blue-800 text-white rounded-md flex items-center justify-center h-12"
+            className="w-full h-12 min-h-[48px] bg-darkblue hover:bg-blue-800 text-white rounded-md flex items-center justify-center transition-all"
             onClick={handleAddToCart}
+            type="button"
           >
             <ShoppingCart className="mr-2 h-5 w-5" /> Adicionar ao Carrinho
           </Button>
