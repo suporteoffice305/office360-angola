@@ -2,44 +2,50 @@
 import React from 'react';
 import { FileText, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   icon: React.ReactNode;
   description: string;
   image: string;
+  basePrice: number;
 }
 
 const ProductSection = () => {
   const products: Product[] = [
     {
-      id: 1,
+      id: 'windows10pro',
       name: 'Windows 10 Pro',
       icon: <FileText size={28} className="text-darkblue" />,
       description: 'Licença permanente com acesso a recursos avançados de segurança e gerenciamento.',
-      image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+      image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      basePrice: 45000
     },
     {
-      id: 2,
+      id: 'windows11pro',
       name: 'Windows 11 Pro',
       icon: <FileText size={28} className="text-darkblue" />,
       description: 'Interface moderna e recursos de produtividade aprimorados para sua empresa.',
-      image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+      image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      basePrice: 55000
     },
     {
-      id: 3,
+      id: 'office365basic',
       name: 'Office 365 Business Basic',
       icon: <Star size={28} className="text-darkblue" />,
       description: 'Pacote completo de aplicativos Microsoft Office com 1TB de armazenamento na nuvem.',
-      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      basePrice: 45000
     },
     {
-      id: 4,
+      id: 'office365premium',
       name: 'Office 365 Business Premium',
       icon: <Star size={28} className="text-darkblue" />,
       description: 'Soluções avançadas de e-mail, videoconferência e gerenciamento para sua equipe.',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      basePrice: 65000
     }
   ];
 
@@ -67,9 +73,10 @@ const ProductSection = () => {
                   {product.icon}
                   <h3 className="text-xl font-semibold text-darkblue ml-2">{product.name}</h3>
                 </div>
-                <p className="text-gray-600 mb-6">{product.description}</p>
-                <Button variant="outline" className="border-darkblue text-darkblue hover:bg-darkblue hover:text-white w-full">
-                  Saiba Mais
+                <p className="text-gray-600 mb-2">{product.description}</p>
+                <p className="text-darkblue font-bold mb-6">A partir de {product.basePrice.toLocaleString('pt-AO')} Kz</p>
+                <Button variant="outline" className="border-darkblue text-darkblue hover:bg-darkblue hover:text-white w-full" asChild>
+                  <Link to={`/produto/${product.id}`}>Saiba Mais</Link>
                 </Button>
               </div>
             </div>

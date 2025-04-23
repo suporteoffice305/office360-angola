@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const CallToAction = () => {
   return (
@@ -11,8 +12,8 @@ const CallToAction = () => {
           <p className="text-lg mb-8 text-gray-200">
             Garanta hoje mesmo as melhores soluções em licenciamento de software para sua empresa e eleve a produtividade ao próximo nível.
           </p>
-          <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-darkblue text-lg px-8 py-6">
-            Fale com um Especialista
+          <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-darkblue text-lg px-8 py-6" asChild>
+            <Link to="/planos">Ver Todos os Planos</Link>
           </Button>
         </div>
       </div>
