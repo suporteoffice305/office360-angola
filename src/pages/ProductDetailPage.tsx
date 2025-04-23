@@ -119,7 +119,8 @@ const productsData: Product[] = [
   }
 ];
 
-const ProductDetailPage = () => {
+// Create a separate ProductDetailContent component that uses the hooks
+const ProductDetailContent = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [users, setUsers] = useState(1);
@@ -158,116 +159,121 @@ const ProductDetailPage = () => {
 
   if (!product) {
     return (
-      <CartProvider>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-grow flex items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-darkblue">Produto não encontrado</h1>
-              <p className="text-gray-600 mt-2">O produto que você está procurando não existe.</p>
-            </div>
-          </main>
-          <Footer />
-        </div>
-      </CartProvider>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-darkblue">Produto não encontrado</h1>
+            <p className="text-gray-600 mt-2">O produto que você está procurando não existe.</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <CartProvider>
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-grow">
-          <section className="py-12 bg-white">
-            <div className="container">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-full h-auto object-cover aspect-[4/3]"
-                  />
-                </div>
-
-                <div className="space-y-6">
-                  <div className="flex items-center">
-                    <span className="bg-darkblue p-2 rounded-full text-white mr-3">
-                      {product.icon}
-                    </span>
-                    <h1 className="text-3xl font-bold text-darkblue">{product.name}</h1>
-                  </div>
-                  
-                  <p className="text-gray-700 text-lg">{product.longDescription}</p>
-                  
-                  <div className="border-t border-b border-gray-200 py-4 my-6">
-                    <div className="flex items-baseline">
-                      <span className="text-3xl font-bold text-darkblue">{product.price.toLocaleString('pt-AO')}</span>
-                      <span className="ml-1 text-sm text-gray-500">Kz / usuário</span>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <label htmlFor="users" className="block text-sm font-medium text-gray-700 mb-1">
-                        Número de Usuários
-                      </label>
-                      <Input
-                        id="users"
-                        type="number"
-                        min="1"
-                        value={users}
-                        onChange={handleUsersChange}
-                        className="max-w-xs"
-                      />
-                    </div>
-                    
-                    <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-                      <div>
-                        <p className="text-sm text-gray-600">Total:</p>
-                        <p className="text-2xl font-bold text-darkblue">{(product.price * users).toLocaleString('pt-AO')} Kz</p>
-                      </div>
-                      <Button size="lg" className="bg-darkblue hover:bg-blue-800" onClick={handleAddToCart}>
-                        <ShoppingCart className="mr-2 h-5 w-5" /> Adicionar ao Carrinho
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-grow">
+        <section className="py-12 bg-white">
+          <div className="container">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg">
+                <img 
+                  src={product.image} 
+                  alt={product.name} 
+                  className="w-full h-auto object-cover aspect-[4/3]"
+                />
               </div>
-            </div>
-          </section>
 
-          <section className="py-12 bg-gray-50">
-            <div className="container">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div>
-                  <h2 className="text-2xl font-bold text-darkblue mb-6">Características</h2>
-                  <ul className="space-y-4">
-                    {product.features.map((feature, index) => (
-                      <li key={index} className="flex">
-                        <Check className="h-5 w-5 text-green-500 mr-3 shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+              <div className="space-y-6">
+                <div className="flex items-center">
+                  <span className="bg-darkblue p-2 rounded-full text-white mr-3">
+                    {product.icon}
+                  </span>
+                  <h1 className="text-3xl font-bold text-darkblue">{product.name}</h1>
                 </div>
                 
-                <div>
-                  <h2 className="text-2xl font-bold text-darkblue mb-6">Requisitos de Sistema</h2>
-                  <ul className="space-y-4">
-                    {product.requirements.map((req, index) => (
-                      <li key={index} className="flex">
-                        <Check className="h-5 w-5 text-green-500 mr-3 shrink-0" />
-                        <span className="text-gray-700">{req}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <p className="text-gray-700 text-lg">{product.longDescription}</p>
+                
+                <div className="border-t border-b border-gray-200 py-4 my-6">
+                  <div className="flex items-baseline">
+                    <span className="text-3xl font-bold text-darkblue">{product.price.toLocaleString('pt-AO')}</span>
+                    <span className="ml-1 text-sm text-gray-500">Kz / usuário</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="users" className="block text-sm font-medium text-gray-700 mb-1">
+                      Número de Usuários
+                    </label>
+                    <Input
+                      id="users"
+                      type="number"
+                      min="1"
+                      value={users}
+                      onChange={handleUsersChange}
+                      className="max-w-xs"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                    <div>
+                      <p className="text-sm text-gray-600">Total:</p>
+                      <p className="text-2xl font-bold text-darkblue">{(product.price * users).toLocaleString('pt-AO')} Kz</p>
+                    </div>
+                    <Button size="lg" className="bg-darkblue hover:bg-blue-800" onClick={handleAddToCart}>
+                      <ShoppingCart className="mr-2 h-5 w-5" /> Adicionar ao Carrinho
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
-          </section>
-        </main>
-        <Footer />
-      </div>
+          </div>
+        </section>
+
+        <section className="py-12 bg-gray-50">
+          <div className="container">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div>
+                <h2 className="text-2xl font-bold text-darkblue mb-6">Características</h2>
+                <ul className="space-y-4">
+                  {product.features.map((feature, index) => (
+                    <li key={index} className="flex">
+                      <Check className="h-5 w-5 text-green-500 mr-3 shrink-0" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div>
+                <h2 className="text-2xl font-bold text-darkblue mb-6">Requisitos de Sistema</h2>
+                <ul className="space-y-4">
+                  {product.requirements.map((req, index) => (
+                    <li key={index} className="flex">
+                      <Check className="h-5 w-5 text-green-500 mr-3 shrink-0" />
+                      <span className="text-gray-700">{req}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// Main ProductDetailPage component that wraps the content with CartProvider
+const ProductDetailPage = () => {
+  return (
+    <CartProvider>
+      <ProductDetailContent />
     </CartProvider>
   );
 };

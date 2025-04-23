@@ -51,7 +51,7 @@ const PlanCard = ({ plan }: PlanProps) => {
   };
 
   return (
-    <Card className={`flex flex-col ${plan.featured ? 'border-darkblue border-2 shadow-lg' : ''}`}>
+    <Card className={`flex flex-col h-full ${plan.featured ? 'border-darkblue border-2 shadow-lg' : ''}`}>
       {plan.featured && (
         <div className="bg-darkblue text-white py-2 text-center text-sm font-medium rounded-t-lg">
           Mais Popular
@@ -79,7 +79,7 @@ const PlanCard = ({ plan }: PlanProps) => {
           ))}
         </ul>
       </CardContent>
-      <CardFooter className="flex flex-col space-y-4">
+      <CardFooter className="flex flex-col space-y-4 pt-4">
         <div className="w-full">
           <label htmlFor={`users-${plan.id}`} className="block text-sm font-medium text-gray-700 mb-1">
             Número de Usuários
@@ -101,8 +101,7 @@ const PlanCard = ({ plan }: PlanProps) => {
             </span>
           </div>
           <Button
-            className="w-full bg-darkblue hover:bg-blue-800 text-white rounded-md px-0 py-3 h-12 transition-all focus:ring-2 focus:ring-offset-2 focus:ring-darkblue font-bold tracking-wider"
-            style={{ borderRadius: 8, minHeight: 48 }}
+            className="w-full bg-darkblue hover:bg-blue-800 text-white rounded-md flex items-center justify-center h-12"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="mr-2 h-5 w-5" /> Adicionar ao Carrinho
