@@ -9,15 +9,51 @@ import PlanCard from '@/components/PlanCard';
 const PlansPage = () => {
   const plans = [
     {
+      id: 'windows10pro',
+      name: 'Windows 10 Pro',
+      price: 10000,
+      features: [
+        'Licença perpétua (uso permanente)',
+        'Bitlocker para criptografia de disco',
+        'Windows Update para empresas',
+        'Acesso à Área de Trabalho Remota',
+        'Suporte a políticas de grupo'
+      ]
+    },
+    {
+      id: 'windowsserver',
+      name: 'Windows Server 2012 / 2019 / 2022 / 2025',
+      price: 150000,
+      features: [
+        'Virtualização avançada com Hyper-V',
+        'Gerenciamento centralizado de servidores',
+        'Alta disponibilidade e failover',
+        'Active Directory e gerenciamento de identidades',
+        'Suporte a containers e integração com Azure'
+      ]
+    },
+    {
+      id: 'windows11pro',
+      name: 'Exchange Server 2019',
+      price: 850000,
+      features: [
+        'Gerenciamento avançado de e-mails, calendários e contatos',
+        'Alta disponibilidade e recuperação de desastres',
+        'Integração com Active Directory',
+        'Acesso via web (OWA) e dispositivos móveis',
+        'Proteção contra spam e malware'
+      ]
+    },
+    {
       id: 'office365basic',
       name: 'Office 365 Business Basic',
       price: 45000,
       features: [
-        'Email corporativo com 50 GB',
-        'Versões web do Office',
-        '1 TB de armazenamento na nuvem',
-        'Reuniões online com até 300 pessoas',
-        'Suporte 24/7'
+        'Email empresarial com 50 GB por usuário',
+        'Versões web e mobile do Word, Excel e PowerPoint',
+        '1 TB de armazenamento no OneDrive por usuário',
+        'Microsoft Teams para reuniões online',
+        'Suporte técnico 24/7'
       ]
     }
   ];
