@@ -40,7 +40,28 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Save cart items to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(items));
-    console.log('Cart updated:', items); // Debugging log
+    
+    // This is useful for debugging but also for syncing with admin dashboard
+    console.log('Cart updated:', items); 
+    
+    // This could be expanded to send cart data to the server for admin dashboard
+    const trackCart = async () => {
+      try {
+        // In a real app, this would be an API call to your backend
+        if (items.length > 0) {
+          // Simulate tracking cart for admin dashboard
+          console.log('Tracking cart for admin dashboard:', {
+            items,
+            total: items.reduce((total, item) => total + (item.price * item.quantity), 0),
+            timestamp: new Date().toISOString()
+          });
+        }
+      } catch (error) {
+        console.error('Error tracking cart:', error);
+      }
+    };
+    
+    trackCart();
   }, [items]);
 
   // Add product to cart

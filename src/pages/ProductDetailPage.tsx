@@ -1,14 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Check, ShoppingCart, FileText, Star } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/hooks/use-toast';
-import { CartProvider } from '@/hooks/useCart';
 
 interface Product {
   id: string;
@@ -121,14 +117,13 @@ const productsData: Product[] = [
   }
 ];
 
-// Create a separate ProductDetailContent component that uses the hooks
-const ProductDetailContent = () => {
+const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [users, setUsers] = useState(1);
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const navigate = useNavigate(); // Hook para navegação
+  const navigate = useNavigate();
 
   useEffect(() => {
     const foundProduct = productsData.find(p => p.id === id);
@@ -152,7 +147,7 @@ const ProductDetailContent = () => {
       description: `${product.name} para ${users} usuário${users > 1 ? 's' : ''} adicionado.`,
     });
     
-    // Redireciona para a página do carrinho após adicionar o produto
+    // Directly navigate to cart page after adding to cart
     navigate('/carrinho');
   };
 
@@ -166,21 +161,18 @@ const ProductDetailContent = () => {
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
         <main className="flex-grow flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-darkblue">Produto não encontrado</h1>
             <p className="text-gray-600 mt-2">O produto que você está procurando não existe.</p>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
       <main className="flex-grow">
         <section className="py-12 bg-white">
           <div className="container">
@@ -270,17 +262,7 @@ const ProductDetailContent = () => {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
-  );
-};
-
-// Main ProductDetailPage component that wraps the content with CartProvider
-const ProductDetailPage = () => {
-  return (
-    <CartProvider>
-      <ProductDetailContent />
-    </CartProvider>
   );
 };
 

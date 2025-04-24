@@ -28,7 +28,7 @@ const PaymentPage = () => {
     setLoading(true);
 
     try {
-      // Simulate payment processing - in production this would integrate with EMIS
+      // Simulate payment processing - in production this would integrate with EMIS or Express
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Success flow
@@ -132,6 +132,19 @@ const PaymentPage = () => {
                           </Label>
                         </div>
 
+                        {/* Express Payment Option (New) */}
+                        <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
+                          <RadioGroupItem value="express" id="express" />
+                          <Label htmlFor="express" className="flex-1 cursor-pointer">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-medium">Express</p>
+                                <p className="text-sm text-gray-500">Pagamento rápido via Express</p>
+                              </div>
+                            </div>
+                          </Label>
+                        </div>
+
                         {/* Bank Transfer Option */}
                         <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
                           <RadioGroupItem value="bank" id="bank" />
@@ -193,6 +206,25 @@ const PaymentPage = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                               </svg>
                               Seus dados de pagamento estão seguros e criptografados
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Express Payment Form - Placeholder for future integration */}
+                      {paymentMethod === 'express' && (
+                        <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50">
+                          <h3 className="font-medium">Pagamento via Express:</h3>
+                          <p className="text-sm text-gray-600">
+                            Ao clicar em "Pagar", você será redirecionado para a plataforma Express 
+                            para completar seu pagamento de forma segura.
+                          </p>
+                          <div className="text-sm text-gray-500">
+                            <p className="flex items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                              </svg>
+                              Transação segura e processada pela Express
                             </p>
                           </div>
                         </div>

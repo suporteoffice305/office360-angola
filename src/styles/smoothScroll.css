@@ -1,0 +1,28 @@
+
+/* Smooth scrolling for the entire website */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Improved page transitions */
+body {
+  overflow-x: hidden;
+}
+
+/* Smooth transitions for all interactive elements */
+a, 
+button, 
+.transition-element {
+  transition: all 0.3s ease;
+}
+
+/* Improved focus styles for accessibility */
+:focus {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Prevent layout shift during loading */
+.prevent-shift {
+  min-height: 100vh;
+}

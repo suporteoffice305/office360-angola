@@ -19,6 +19,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import React from "react";
 
+// Add smooth scrolling for the entire app
+import "./styles/smoothScroll.css";
+
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
 
@@ -34,7 +37,7 @@ function AppRoutesWrapper() {
     return (
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/*" element={<AdminPage />} />
         <Route path="/cadastro" element={<LoginPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
