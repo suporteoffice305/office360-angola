@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,9 +17,11 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
 
   // Check if cart is empty and redirect if needed
-  if (items.length === 0) {
-    return navigate('/carrinho');
-  }
+  useEffect(() => {
+    if (items.length === 0) {
+      navigate('/carrinho');
+    }
+  }, [items, navigate]);
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +53,7 @@ const PaymentPage = () => {
     }
   };
 
+  // If items array is empty, this will be handled by the useEffect
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container py-16">
