@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -5,10 +6,16 @@ import { CartProvider } from '@/hooks/useCart';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CartContent = () => {
   const { items, removeFromCart, updateQuantity, updateUsers, getTotalPrice } = useCart();
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    // Navega para a página de pagamento
+    navigate('/pagamento');
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -89,8 +96,11 @@ const CartContent = () => {
                     <Button asChild variant="outline" className="flex-1">
                       <Link to="/planos">Continuar Comprando</Link>
                     </Button>
-                    <Button asChild className="flex-1 bg-darkblue hover:bg-blue-800">
-                      <Link to="/pagamento">Finalizar Compra</Link>
+                    <Button 
+                      className="flex-1 bg-darkblue hover:bg-blue-800"
+                      onClick={handleCheckout}
+                    >
+                      Finalizar Compra
                     </Button>
                   </div>
                 </div>

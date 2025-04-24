@@ -73,6 +73,8 @@ const App = () => (
 );
 
 export default App;
+
 // Comentários:
-// - CartProvider e layout header/footer só nas telas realmente necessárias.
-// - Login/Cadastro são páginas limpas, prontas para “API” php/laravel no futuro via fetch.
+// - CartProvider envolve todas as rotas que precisam de acesso ao carrinho
+// - Login/Cadastro são páginas limpas, sem header/footer, prontas para integração com PHP/Laravel
+// - A estrutura está preparada para backend PHP/Laravel e banco de dados MySQL

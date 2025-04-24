@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Card de plano individual.
@@ -20,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
  * - Permite selecionar número de usuários (mínimo: 1)
  * - Botão ocupa sempre todo o espaço e é quadrado, responsivo
  * - Integração total com carrinho
+ * - Redireciona automaticamente para o carrinho após adicionar
  */
 interface PlanProps {
   plan: {
@@ -35,8 +37,9 @@ const PlanCard = ({ plan }: PlanProps) => {
   const [users, setUsers] = useState(1);
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  // Handler para adicionar ao carrinho
+  // Handler para adicionar ao carrinho e redirecionar para a página do carrinho
   const handleAddToCart = () => {
     addToCart({
       id: plan.id,
@@ -44,10 +47,14 @@ const PlanCard = ({ plan }: PlanProps) => {
       price: plan.price * users,
       users
     }, 1);
+    
     toast({
       title: "Adicionado ao carrinho",
       description: `${plan.name} para ${users} usuário${users > 1 ? 's' : ''} adicionado.`,
     });
+    
+    // Redireciona para a página do carrinho após adicionar o produto
+    navigate('/carrinho');
   };
 
   // Handler do input do número de usuários

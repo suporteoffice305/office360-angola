@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -128,6 +128,7 @@ const ProductDetailContent = () => {
   const [users, setUsers] = useState(1);
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const navigate = useNavigate(); // Hook para navegação
 
   useEffect(() => {
     const foundProduct = productsData.find(p => p.id === id);
@@ -150,6 +151,9 @@ const ProductDetailContent = () => {
       title: "Adicionado ao carrinho",
       description: `${product.name} para ${users} usuário${users > 1 ? 's' : ''} adicionado.`,
     });
+    
+    // Redireciona para a página do carrinho após adicionar o produto
+    navigate('/carrinho');
   };
 
   const handleUsersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
