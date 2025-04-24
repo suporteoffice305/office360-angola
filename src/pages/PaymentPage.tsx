@@ -1,59 +1,35 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
 const PaymentPage = () => {
-  const { items, getTotalPrice, clearCart } = useCart();
+  const { items, getTotalPrice } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = useState('emis');
-  const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = React.useState('express');
 
   // Check if cart is empty and redirect if needed
-  useEffect(() => {
+  React.useEffect(() => {
     if (items.length === 0) {
       navigate('/carrinho');
     }
   }, [items, navigate]);
 
-  const handlePayment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      // Simulate payment processing - in production this would integrate with EMIS or Express
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Success flow
-      toast({
-        title: "Pagamento processado com sucesso!",
-        description: "Você receberá um email com os detalhes da sua compra.",
-      });
-      
-      // Clear cart after successful payment
-      clearCart();
-      
-      // Redirect to success page or home
-      navigate('/');
-    } catch (error) {
-      toast({
-        title: "Erro no processamento do pagamento",
-        description: "Por favor, tente novamente ou use outro método de pagamento.",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleProceedToPayment = () => {
+    // Store payment method in localStorage for the next page
+    localStorage.setItem('selectedPaymentMethod', paymentMethod);
+    
+    // Redirect to the payment process page (which will be implemented in PHP by the user)
+    navigate('/pagamento-processo');
   };
 
-  // If items array is empty, this will be handled by the useEffect
+  // Return JSX element to fix the TypeScript error
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container py-16">
@@ -96,7 +72,7 @@ const PaymentPage = () => {
               </Card>
             </div>
 
-            {/* Payment Form */}
+            {/* Payment Options - Simplified version with just instructions */}
             <div className="md:col-span-2">
               <Card>
                 <CardHeader>
@@ -106,155 +82,80 @@ const PaymentPage = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handlePayment}>
-                    <div className="space-y-6">
-                      <RadioGroup 
-                        defaultValue="emis" 
-                        value={paymentMethod}
-                        onValueChange={setPaymentMethod}
-                        className="space-y-4"
-                      >
-                        {/* EMIS Payment Option */}
-                        <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
-                          <RadioGroupItem value="emis" id="emis" />
-                          <Label htmlFor="emis" className="flex-1 cursor-pointer">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="font-medium">EMIS (Recomendado)</p>
-                                <p className="text-sm text-gray-500">Pagamento seguro via EMIS</p>
-                              </div>
-                              <img 
-                                src="/lovable-uploads/8d983a1a-eec6-487c-88be-efec0c2f85e1.png" 
-                                alt="EMIS" 
-                                className="h-8"
-                              />
-                            </div>
-                          </Label>
-                        </div>
-
-                        {/* Express Payment Option (New) */}
-                        <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
-                          <RadioGroupItem value="express" id="express" />
-                          <Label htmlFor="express" className="flex-1 cursor-pointer">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="font-medium">Express</p>
-                                <p className="text-sm text-gray-500">Pagamento rápido via Express</p>
-                              </div>
-                            </div>
-                          </Label>
-                        </div>
-
-                        {/* Bank Transfer Option */}
-                        <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
-                          <RadioGroupItem value="bank" id="bank" />
-                          <Label htmlFor="bank" className="flex-1 cursor-pointer">
+                  <div className="space-y-6">
+                    <RadioGroup 
+                      defaultValue="express" 
+                      value={paymentMethod}
+                      onValueChange={setPaymentMethod}
+                      className="space-y-4"
+                    >
+                      {/* Express Payment Option */}
+                      <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
+                        <RadioGroupItem value="express" id="express" />
+                        <Label htmlFor="express" className="flex-1 cursor-pointer">
+                          <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-medium">Transferência Bancária</p>
-                              <p className="text-sm text-gray-500">Transferir para nossa conta bancária</p>
-                            </div>
-                          </Label>
-                        </div>
-                      </RadioGroup>
-
-                      {/* EMIS Payment Form */}
-                      {paymentMethod === 'emis' && (
-                        <div className="space-y-4 mt-6">
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="col-span-2">
-                              <Label htmlFor="card-number">Número do Cartão</Label>
-                              <Input 
-                                id="card-number" 
-                                placeholder="0000 0000 0000 0000" 
-                                className="mt-1"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="expiry">Data de Validade</Label>
-                              <Input 
-                                id="expiry" 
-                                placeholder="MM/AA" 
-                                className="mt-1"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="cvv">CVV</Label>
-                              <Input 
-                                id="cvv" 
-                                placeholder="123" 
-                                className="mt-1"
-                                maxLength={4}
-                                required
-                              />
-                            </div>
-                            <div className="col-span-2">
-                              <Label htmlFor="name">Nome no Cartão</Label>
-                              <Input 
-                                id="name" 
-                                placeholder="Nome como aparece no cartão" 
-                                className="mt-1"
-                                required
-                              />
+                              <p className="font-medium">Express</p>
+                              <p className="text-sm text-gray-500">Pagamento rápido via Express</p>
                             </div>
                           </div>
-                          
-                          <div className="text-sm text-gray-500">
-                            <p className="flex items-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                              </svg>
-                              Seus dados de pagamento estão seguros e criptografados
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                        </Label>
+                      </div>
 
-                      {/* Express Payment Form - Placeholder for future integration */}
-                      {paymentMethod === 'express' && (
-                        <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50">
-                          <h3 className="font-medium">Pagamento via Express:</h3>
-                          <p className="text-sm text-gray-600">
-                            Ao clicar em "Pagar", você será redirecionado para a plataforma Express 
-                            para completar seu pagamento de forma segura.
+                      {/* Bank Transfer Option */}
+                      <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
+                        <RadioGroupItem value="bank" id="bank" />
+                        <Label htmlFor="bank" className="flex-1 cursor-pointer">
+                          <div>
+                            <p className="font-medium">Transferência Bancária</p>
+                            <p className="text-sm text-gray-500">Transferir para nossa conta bancária</p>
+                          </div>
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                    
+                    {/* Express Payment Instructions */}
+                    {paymentMethod === 'express' && (
+                      <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50">
+                        <h3 className="font-medium">Pagamento via Express:</h3>
+                        <p className="text-sm text-gray-600">
+                          Ao clicar em "Continuar", você será redirecionado para a plataforma Express 
+                          para completar seu pagamento de forma segura.
+                        </p>
+                        <div className="text-sm text-gray-500">
+                          <p className="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            Transação segura e processada pela Express
                           </p>
-                          <div className="text-sm text-gray-500">
-                            <p className="flex items-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                              </svg>
-                              Transação segura e processada pela Express
-                            </p>
-                          </div>
                         </div>
-                      )}
-                      
-                      {/* Bank Transfer Details */}
-                      {paymentMethod === 'bank' && (
-                        <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50">
-                          <h3 className="font-medium">Detalhes da Transferência:</h3>
-                          <div className="space-y-2 text-sm">
-                            <p><span className="font-medium">Banco:</span> Banco Económico</p>
-                            <p><span className="font-medium">Titular:</span> Office360 Lda</p>
-                            <p><span className="font-medium">Conta:</span> 123456789</p>
-                            <p><span className="font-medium">IBAN:</span> AO06 0000 0000 0123 4567 8910 5</p>
-                            <p className="text-darkblue font-medium mt-4">
-                              Após a transferência, envie o comprovante para payments@office360.co.ao
-                            </p>
-                          </div>
+                      </div>
+                    )}
+                    
+                    {/* Bank Transfer Details */}
+                    {paymentMethod === 'bank' && (
+                      <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50">
+                        <h3 className="font-medium">Detalhes da Transferência:</h3>
+                        <div className="space-y-2 text-sm">
+                          <p><span className="font-medium">Banco:</span> Banco Económico</p>
+                          <p><span className="font-medium">Titular:</span> Office360 Lda</p>
+                          <p><span className="font-medium">Conta:</span> 123456789</p>
+                          <p><span className="font-medium">IBAN:</span> AO06 0000 0000 0123 4567 8910 5</p>
+                          <p className="text-darkblue font-medium mt-4">
+                            Após a transferência, envie o comprovante para payments@office360.co.ao
+                          </p>
                         </div>
-                      )}
-                      
-                      <Button 
-                        type="submit" 
-                        className="w-full bg-darkblue hover:bg-blue-800"
-                        disabled={loading}
-                      >
-                        {loading ? "Processando..." : `Pagar ${getTotalPrice().toLocaleString('pt-AO')} Kz`}
-                      </Button>
-                    </div>
-                  </form>
+                      </div>
+                    )}
+                    
+                    <Button 
+                      className="w-full bg-darkblue hover:bg-blue-800"
+                      onClick={handleProceedToPayment}
+                    >
+                      Continuar
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>

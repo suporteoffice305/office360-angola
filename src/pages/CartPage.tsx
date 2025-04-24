@@ -10,7 +10,7 @@ const CartPage = () => {
   const navigate = useNavigate();
 
   const handleCheckout = () => {
-    // Navigate to the payment page to integrate with EMIS payment gateway
+    // Navigate to the payment page
     navigate('/pagamento');
   };
 
@@ -24,7 +24,7 @@ const CartPage = () => {
             {items.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-gray-600 mb-6">Seu carrinho está vazio.</p>
-                <Button asChild className="bg-darkblue hover:bg-blue-800">
+                <Button asChild className="bg-darkblue hover:bg-blue-800 transition-all duration-300">
                   <Link to="/planos">Ver Planos Disponíveis</Link>
                 </Button>
               </div>
@@ -60,7 +60,7 @@ const CartPage = () => {
                         </span>
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="flex items-center text-red-500 hover:text-red-700 mt-2"
+                          className="flex items-center text-red-500 hover:text-red-700 mt-2 transition-colors duration-300"
                         >
                           <Trash2 className="h-4 w-4 mr-1" />
                           <span className="text-sm">Remover</span>
@@ -79,11 +79,11 @@ const CartPage = () => {
                   </div>
                   
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Button asChild variant="outline" className="flex-1">
+                    <Button asChild variant="outline" className="flex-1 transition-all duration-300">
                       <Link to="/planos">Continuar Comprando</Link>
                     </Button>
                     <Button 
-                      className="flex-1 bg-darkblue hover:bg-blue-800"
+                      className="flex-1 bg-darkblue hover:bg-blue-800 transition-all duration-300"
                       onClick={handleCheckout}
                     >
                       Finalizar Compra

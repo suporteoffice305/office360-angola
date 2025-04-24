@@ -10,6 +10,7 @@ import PlansPage from "./pages/PlansPage";
 import CartPage from "./pages/CartPage";
 import LoginPage from "./pages/LoginPage";
 import PaymentPage from "./pages/PaymentPage";
+import PaymentProcessPage from "./pages/PaymentProcessPage";
 import ClientAreaPage from "./pages/ClientAreaPage";
 import AdminPage from "./pages/AdminPage";
 import AboutPage from "./pages/AboutPage";
@@ -30,7 +31,7 @@ function AppRoutesWrapper() {
   const location = useLocation();
   
   // Pages without header/footer (authentication & admin pages)
-  const hideLayoutRoutes = ["/login", "/cadastro", "/admin"];
+  const hideLayoutRoutes = ["/login", "/cadastro", "/admin", "/pagamento-processo"];
   const hideLayout = hideLayoutRoutes.some(route => location.pathname.startsWith(route));
 
   if (hideLayout) {
@@ -39,6 +40,7 @@ function AppRoutesWrapper() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin/*" element={<AdminPage />} />
         <Route path="/cadastro" element={<LoginPage />} />
+        <Route path="/pagamento-processo" element={<PaymentProcessPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     );
