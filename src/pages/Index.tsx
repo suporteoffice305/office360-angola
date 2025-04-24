@@ -12,21 +12,14 @@ import { CartProvider } from '@/hooks/useCart';
 
 const Index = () => {
   return (
-    // CartProvider já está acima no App.tsx
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow">
-        <Hero />
-        <ProductSection />
-        <Benefits />
-        <Testimonials />
-        <CallToAction /> {/* Esse componente contém o botão "Ver Todos os Planos" */}
-      </main>
-      <Footer />
-    </div>
+    <main className="flex-grow">
+      <Hero />
+      <ProductSection />
+      <Benefits />
+      <Testimonials />
+      <CallToAction />
+    </main>
   );
 };
 
 export default Index;
-
-// Fique tranquilo: botão "Ver Todos os Planos" é gerado pelo componente CallToAction. 
