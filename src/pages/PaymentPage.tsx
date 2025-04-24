@@ -22,22 +22,20 @@ const PaymentPage = () => {
   }, [items, navigate]);
 
   const handleProceedToPayment = () => {
-    // Store payment method in localStorage for the next page
     localStorage.setItem('selectedPaymentMethod', paymentMethod);
-    
-    // For Express payment, open in a new tab
+
     if (paymentMethod === 'express') {
-      // In a real implementation, this would redirect to the PHP payment page
-      // Opening a blank window for the user to implement their PHP payment form
-      window.open('/pagamento-processo', '_blank');
-      
-      // Toast message to inform the user
+      // Gera uma referência única para o pedido
+      const reference = `ORDER-${Date.now()}`;
+      const amount = getTotalPrice();
+
+      submitExpressPayment(reference, amount);
+
       toast({
         title: "Pagamento iniciado",
         description: "Uma nova janela foi aberta para processamento do pagamento.",
       });
     } else {
-      // For bank transfer, just navigate to process page in the same tab
       navigate('/pagamento-processo');
     }
   };
@@ -179,3 +177,28 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
+
+
+const submitExpressPayment = (reference: string, amount: number) => {
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/backend/pagar.php';
+  form.target = '_blank';
+
+  const refInput = document.createElement('input');
+  refInput.type = 'hidden';
+  refInput.name = 'reference';
+  refInput.value = reference;
+
+  const amountInput = document.createElement('input');
+  amountInput.type = 'hidden';
+  amountInput.name = 'amount';
+  amountInput.value = amount.toString();
+
+  form.appendChild(refInput);
+  form.appendChild(amountInput);
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+};
