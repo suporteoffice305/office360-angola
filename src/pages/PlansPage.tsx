@@ -1,9 +1,6 @@
 import React from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
-import { CartProvider } from '@/hooks/useCart';
 import PlanCard from '@/components/PlanCard';
 
 const PlansPage = () => {
@@ -60,7 +57,6 @@ const PlansPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
       <main className="flex-grow">
         <section className="py-16 bg-gray-50">
           <div className="container">
@@ -93,7 +89,6 @@ const PlansPage = () => {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 };
