@@ -21,16 +21,13 @@ const PaymentProcessPage = () => {
       return;
     }
 
-    // This page is just a placeholder
-    // The actual payment form will be implemented by the user in PHP
     toast({
       title: "Redirecionando para o processamento de pagamento",
       description: `Método selecionado: ${paymentMethod === 'express' ? 'Express' : 'Transferência Bancária'}`,
     });
 
-    // In a real implementation, this would redirect to the PHP payment page
-    // or handle the payment processing logic
-    
+    // This is a placeholder page - the actual payment processing will happen in the PHP page
+    // The user will implement the actual form in PHP
   }, [toast, navigate]);
 
   return (

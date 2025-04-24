@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PlansPage from "./pages/PlansPage";
@@ -26,57 +26,79 @@ import "./styles/smoothScroll.css";
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
 
-// Wrapper component for routes with conditional Header/Footer
-function AppRoutesWrapper() {
-  const location = useLocation();
-  
-  // Pages without header/footer (authentication & admin pages)
-  const hideLayoutRoutes = ["/login", "/cadastro", "/admin", "/pagamento-processo"];
-  const hideLayout = hideLayoutRoutes.some(route => location.pathname.startsWith(route));
-
-  if (hideLayout) {
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin/*" element={<AdminPage />} />
-        <Route path="/cadastro" element={<LoginPage />} />
-        <Route path="/pagamento-processo" element={<PaymentProcessPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    );
-  }
-  
-  // All other routes with Header/Footer
+// Create the main App component with improved routing
+const App = () => {
   return (
-    <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/planos" element={<PlansPage />} />
-        <Route path="/carrinho" element={<CartPage />} />
-        <Route path="/pagamento" element={<PaymentPage />} />
-        <Route path="/area-cliente" element={<ClientAreaPage />} />
-        <Route path="/sobre" element={<AboutPage />} />
-        <Route path="/produto/:id" element={<ProductDetailPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
-    </>
-  );
-}
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <CartProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Routes without header/footer (authentication & admin pages) */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/cadastro" element={<LoginPage />} />
+              <Route path="/admin/*" element={<AdminPage />} />
+              <Route path="/pagamento-processo" element={<PaymentProcessPage />} />
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <CartProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AppRoutesWrapper />
-        </BrowserRouter>
-      </CartProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+              {/* Routes with header/footer */}
+              <Route path="/" element={
+                <>
+                  <Header />
+                  <Index />
+                  <Footer />
+                </>
+              } />
+              <Route path="/planos" element={
+                <>
+                  <Header />
+                  <PlansPage />
+                  <Footer />
+                </>
+              } />
+              <Route path="/carrinho" element={
+                <>
+                  <Header />
+                  <CartPage />
+                  <Footer />
+                </>
+              } />
+              <Route path="/pagamento" element={
+                <>
+                  <Header />
+                  <PaymentPage />
+                  <Footer />
+                </>
+              } />
+              <Route path="/area-cliente" element={
+                <>
+                  <Header />
+                  <ClientAreaPage />
+                  <Footer />
+                </>
+              } />
+              <Route path="/sobre" element={
+                <>
+                  <Header />
+                  <AboutPage />
+                  <Footer />
+                </>
+              } />
+              <Route path="/produto/:id" element={
+                <>
+                  <Header />
+                  <ProductDetailPage />
+                  <Footer />
+                </>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </CartProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

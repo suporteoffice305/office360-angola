@@ -53,7 +53,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           console.log('Tracking cart for admin dashboard:', {
             items,
             total: items.reduce((total, item) => total + (item.price * item.quantity), 0),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            user: localStorage.getItem('user') || 'anonymous',
+            event: 'cart_update'
           });
         }
       } catch (error) {
@@ -66,7 +68,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   // Add product to cart
   const addToCart = (product: Product, quantity: number) => {
-    console.log('Adding to cart:', product, quantity); // Debugging log
+    if (quantity <= 0) return;
     
     setItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.id);
@@ -83,9 +85,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // Remove product from cart
+  // Remove product from cart - improved with immediate update
   const removeFromCart = (productId: string) => {
-    setItems(prevItems => prevItems.filter(item => item.id !== productId));
+    // Immediately filter out the removed item
+    const updatedItems = items.filter(item => item.id !== productId);
+    setItems(updatedItems);
+    
+    // Track removal for analytics
+    console.log('Item removed from cart:', productId);
+    
+    // Update localStorage immediately for persistence
+    localStorage.setItem('cart', JSON.stringify(updatedItems));
   };
 
   // Update quantity of product in cart
@@ -125,6 +135,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Clear all items from cart
   const clearCart = () => {
     setItems([]);
+    localStorage.removeItem('cart');
   };
 
   // Calculate total price of all items in cart

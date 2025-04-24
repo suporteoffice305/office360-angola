@@ -25,11 +25,23 @@ const PaymentPage = () => {
     // Store payment method in localStorage for the next page
     localStorage.setItem('selectedPaymentMethod', paymentMethod);
     
-    // Redirect to the payment process page (which will be implemented in PHP by the user)
-    navigate('/pagamento-processo');
+    // For Express payment, open in a new tab
+    if (paymentMethod === 'express') {
+      // In a real implementation, this would redirect to the PHP payment page
+      // Opening a blank window for the user to implement their PHP payment form
+      window.open('/pagamento-processo', '_blank');
+      
+      // Toast message to inform the user
+      toast({
+        title: "Pagamento iniciado",
+        description: "Uma nova janela foi aberta para processamento do pagamento.",
+      });
+    } else {
+      // For bank transfer, just navigate to process page in the same tab
+      navigate('/pagamento-processo');
+    }
   };
 
-  // Return JSX element to fix the TypeScript error
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container py-16">
@@ -72,9 +84,9 @@ const PaymentPage = () => {
               </Card>
             </div>
 
-            {/* Payment Options - Simplified version with just instructions */}
+            {/* Payment Options */}
             <div className="md:col-span-2">
-              <Card>
+              <Card className="transition-all duration-300 hover:shadow-lg">
                 <CardHeader>
                   <CardTitle>Método de Pagamento</CardTitle>
                   <CardDescription>
@@ -90,7 +102,7 @@ const PaymentPage = () => {
                       className="space-y-4"
                     >
                       {/* Express Payment Option */}
-                      <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
+                      <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-300">
                         <RadioGroupItem value="express" id="express" />
                         <Label htmlFor="express" className="flex-1 cursor-pointer">
                           <div className="flex items-center justify-between">
@@ -103,7 +115,7 @@ const PaymentPage = () => {
                       </div>
 
                       {/* Bank Transfer Option */}
-                      <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
+                      <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-300">
                         <RadioGroupItem value="bank" id="bank" />
                         <Label htmlFor="bank" className="flex-1 cursor-pointer">
                           <div>
@@ -116,7 +128,7 @@ const PaymentPage = () => {
                     
                     {/* Express Payment Instructions */}
                     {paymentMethod === 'express' && (
-                      <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50">
+                      <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50 transition-all duration-300">
                         <h3 className="font-medium">Pagamento via Express:</h3>
                         <p className="text-sm text-gray-600">
                           Ao clicar em "Continuar", você será redirecionado para a plataforma Express 
@@ -135,7 +147,7 @@ const PaymentPage = () => {
                     
                     {/* Bank Transfer Details */}
                     {paymentMethod === 'bank' && (
-                      <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50">
+                      <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50 transition-all duration-300">
                         <h3 className="font-medium">Detalhes da Transferência:</h3>
                         <div className="space-y-2 text-sm">
                           <p><span className="font-medium">Banco:</span> Banco Económico</p>
@@ -150,7 +162,7 @@ const PaymentPage = () => {
                     )}
                     
                     <Button 
-                      className="w-full bg-darkblue hover:bg-blue-800"
+                      className="w-full bg-darkblue hover:bg-blue-800 transition-all duration-300 transform hover:scale-[1.02]"
                       onClick={handleProceedToPayment}
                     >
                       Continuar
