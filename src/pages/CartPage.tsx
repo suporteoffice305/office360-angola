@@ -1,25 +1,21 @@
 
 import React from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { CartProvider } from '@/hooks/useCart';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const CartContent = () => {
-  const { items, removeFromCart, updateQuantity, updateUsers, getTotalPrice } = useCart();
+const CartPage = () => {
+  const { items, removeFromCart, updateQuantity, getTotalPrice } = useCart();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
-    // Navega para a página de pagamento
+    // Navigate to the payment page to integrate with EMIS payment gateway
     navigate('/pagamento');
   };
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
       <main className="flex-grow py-16">
         <div className="container">
           <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
@@ -39,7 +35,10 @@ const CartContent = () => {
                     <div key={item.id} className="flex flex-col md:flex-row justify-between border-b pb-6">
                       <div className="flex-grow mb-4 md:mb-0">
                         <h3 className="font-medium text-lg">{item.name}</h3>
-                        <div className="flex items-center mt-2 space-x-4">
+                        <p className="text-gray-600">
+                          {item.users} {item.users === 1 ? 'usuário' : 'usuários'}
+                        </p>
+                        <div className="flex items-center mt-2">
                           <div>
                             <label htmlFor={`quantity-${item.id}`} className="block text-sm text-gray-600 mb-1">
                               Quantidade
@@ -50,19 +49,6 @@ const CartContent = () => {
                               min="1"
                               value={item.quantity}
                               onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
-                              className="w-20 border rounded p-1 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <label htmlFor={`users-${item.id}`} className="block text-sm text-gray-600 mb-1">
-                              Usuários
-                            </label>
-                            <input
-                              id={`users-${item.id}`}
-                              type="number"
-                              min="1"
-                              value={item.users}
-                              onChange={(e) => updateUsers(item.id, parseInt(e.target.value))}
                               className="w-20 border rounded p-1 text-sm"
                             />
                           </div>
@@ -109,19 +95,8 @@ const CartContent = () => {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };
-
-/**
- * ⚠️ MUITO IMPORTANTE: 
- * TODA A ÁRVORE DE COMPONENTES PRECISA ESTAR DENTRO DO CartProvider para evitar o erro "useCart must be used within a CartProvider".
- */
-const CartPage = () => (
-  <CartProvider>
-    <CartContent />
-  </CartProvider>
-);
 
 export default CartPage;

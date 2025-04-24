@@ -1,6 +1,4 @@
 
-// ENVOLVE TUDO NO CartProvider, MAS LOGIN E OUTRAS TELAS AUTÔNOMAS NÃO TÊM HEADER/FOOTER
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,64 +15,63 @@ import AdminPage from "./pages/AdminPage";
 import AboutPage from "./pages/AboutPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import { CartProvider } from "@/hooks/useCart";
-
-// Para esconder Header/Footer em algumas páginas de autenticação
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import React from "react";
 
+// Create a new QueryClient instance
 const queryClient = new QueryClient();
 
-// Ajuda a decidir se exibe header/footer
+// Wrapper component for routes with conditional Header/Footer
 function AppRoutesWrapper() {
-  const location = window.location.pathname;
-  // Páginas sem menu/footer
-  const hideLayoutRoutes = ["/login", "/cadastro"];
-  const hideLayout = hideLayoutRoutes.includes(location);
+  const location = useLocation();
+  
+  // Pages without header/footer (authentication & admin pages)
+  const hideLayoutRoutes = ["/login", "/cadastro", "/admin"];
+  const hideLayout = hideLayoutRoutes.some(route => location.pathname.startsWith(route));
 
-  // Para páginas sem menu/footer, renderiza somente a página
   if (hideLayout) {
     return (
-      <>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          {/* Adicione a rota de cadastro quando existir */}
-        </Routes>
-      </>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/cadastro" element={<LoginPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     );
   }
-  // Demais rotas: CartProvider inclui header/footer nas páginas
+  
+  // All other routes with Header/Footer
   return (
-    <CartProvider>
+    <>
+      <Header />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/planos" element={<PlansPage />} />
         <Route path="/carrinho" element={<CartPage />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/pagamento" element={<PaymentPage />} />
         <Route path="/area-cliente" element={<ClientAreaPage />} />
-        <Route path="/admin" element={<AdminPage />} />
         <Route path="/sobre" element={<AboutPage />} />
         <Route path="/produto/:id" element={<ProductDetailPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </CartProvider>
+      <Footer />
+    </>
   );
 }
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AppRoutesWrapper />
-      </BrowserRouter>
+      <CartProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppRoutesWrapper />
+        </BrowserRouter>
+      </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
 
 export default App;
-
-// Comentários:
-// - CartProvider envolve todas as rotas que precisam de acesso ao carrinho
-// - Login/Cadastro são páginas limpas, sem header/footer, prontas para integração com PHP/Laravel
-// - A estrutura está preparada para backend PHP/Laravel e banco de dados MySQL

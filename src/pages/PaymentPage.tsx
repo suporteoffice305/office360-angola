@@ -1,243 +1,232 @@
 
 import React, { useState } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { CartProvider, useCart } from '@/hooks/useCart';
+import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { CreditCard, CircleDollarSign, Landmark } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
-/**
- * Componente de conteúdo da página de pagamento
- * Preparado para integração com gateway de pagamento emis.ao via backend PHP/Laravel
- */
-const PaymentContent = () => {
+const PaymentPage = () => {
   const { items, getTotalPrice, clearCart } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState<string>('card');
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [paymentMethod, setPaymentMethod] = useState('emis');
+  const [loading, setLoading] = useState(false);
 
-  // Função para lidar com o envio do formulário de pagamento
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    setIsProcessing(true);
-    
-    // Simula processamento (será substituído pela integração real com emis.ao)
-    setTimeout(() => {
-      toast({
-        title: "Pagamento processado",
-        description: "O seu pedido foi processado com sucesso.",
-      });
-      clearCart();
-      setIsProcessing(false);
-      
-      // Aqui será feita a chamada para a API PHP/Laravel que integrará com emis.ao
-      // window.location.href = '/confirmacao-pedido'; // Redirecionar após sucesso
-    }, 1500);
-  };
-
+  // Check if cart is empty and redirect if needed
   if (items.length === 0) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-grow py-16">
-          <div className="container">
-            <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-              <h1 className="text-2xl font-bold text-darkblue mb-6">Finalizar Pagamento</h1>
-              <p className="text-gray-600 mb-4">Seu carrinho está vazio. Adicione produtos antes de prosseguir com o pagamento.</p>
-              <Button asChild className="bg-darkblue hover:bg-blue-800">
-                <a href="/planos">Ver Planos</a>
-              </Button>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+    return navigate('/carrinho');
   }
 
+  const handlePayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Simulate payment processing - in production this would integrate with EMIS
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Success flow
+      toast({
+        title: "Pagamento processado com sucesso!",
+        description: "Você receberá um email com os detalhes da sua compra.",
+      });
+      
+      // Clear cart after successful payment
+      clearCart();
+      
+      // Redirect to success page or home
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "Erro no processamento do pagamento",
+        description: "Por favor, tente novamente ou use outro método de pagamento.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow py-16">
-        <div className="container">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold text-darkblue mb-6">Finalizar Pagamento</h1>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="col-span-1 lg:col-span-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Selecione o método de pagamento</CardTitle>
-                    <CardDescription>
-                      Escolha um método de pagamento seguro
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleSubmit}>
+    <div className="min-h-screen bg-gray-50">
+      <main className="container py-16">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold text-darkblue">Finalizar Compra</h1>
+            <p className="text-gray-600 mt-2">Selecione o método de pagamento para completar sua compra</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Order Summary */}
+            <div className="md:col-span-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Resumo do Pedido</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between">
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-sm text-gray-500">
+                          {item.quantity} x {item.users} {item.users === 1 ? 'usuário' : 'usuários'}
+                        </p>
+                      </div>
+                      <span className="font-medium">
+                        {(item.price * item.quantity).toLocaleString('pt-AO')} Kz
+                      </span>
+                    </div>
+                  ))}
+                </CardContent>
+                <CardFooter className="border-t pt-4">
+                  <div className="w-full flex justify-between">
+                    <span className="font-bold">Total</span>
+                    <span className="font-bold text-darkblue">
+                      {getTotalPrice().toLocaleString('pt-AO')} Kz
+                    </span>
+                  </div>
+                </CardFooter>
+              </Card>
+            </div>
+
+            {/* Payment Form */}
+            <div className="md:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Método de Pagamento</CardTitle>
+                  <CardDescription>
+                    Escolha como deseja pagar pelo seu pedido
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handlePayment}>
+                    <div className="space-y-6">
                       <RadioGroup 
-                        defaultValue="card" 
-                        className="grid gap-6 mb-8"
+                        defaultValue="emis" 
                         value={paymentMethod}
                         onValueChange={setPaymentMethod}
+                        className="space-y-4"
                       >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="card" id="card" />
-                          <Label htmlFor="card" className="flex items-center gap-2 cursor-pointer">
-                            <CreditCard className="h-5 w-5" />
-                            <span>Cartão de Crédito/Débito</span>
+                        {/* EMIS Payment Option */}
+                        <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
+                          <RadioGroupItem value="emis" id="emis" />
+                          <Label htmlFor="emis" className="flex-1 cursor-pointer">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-medium">EMIS (Recomendado)</p>
+                                <p className="text-sm text-gray-500">Pagamento seguro via EMIS</p>
+                              </div>
+                              <img 
+                                src="/lovable-uploads/8d983a1a-eec6-487c-88be-efec0c2f85e1.png" 
+                                alt="EMIS" 
+                                className="h-8"
+                              />
+                            </div>
                           </Label>
                         </div>
-                        
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="multicaixa" id="multicaixa" />
-                          <Label htmlFor="multicaixa" className="flex items-center gap-2 cursor-pointer">
-                            <CircleDollarSign className="h-5 w-5" />
-                            <span>Multicaixa Express</span>
-                          </Label>
-                        </div>
-                        
-                        <div className="flex items-center space-x-2">
+
+                        {/* Bank Transfer Option */}
+                        <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50">
                           <RadioGroupItem value="bank" id="bank" />
-                          <Label htmlFor="bank" className="flex items-center gap-2 cursor-pointer">
-                            <Landmark className="h-5 w-5" />
-                            <span>Transferência Bancária</span>
+                          <Label htmlFor="bank" className="flex-1 cursor-pointer">
+                            <div>
+                              <p className="font-medium">Transferência Bancária</p>
+                              <p className="text-sm text-gray-500">Transferir para nossa conta bancária</p>
+                            </div>
                           </Label>
                         </div>
                       </RadioGroup>
 
-                      {/* Campos específicos para cada método de pagamento */}
-                      {paymentMethod === 'card' && (
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-1 gap-4">
+                      {/* EMIS Payment Form */}
+                      {paymentMethod === 'emis' && (
+                        <div className="space-y-4 mt-6">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="col-span-2">
+                              <Label htmlFor="card-number">Número do Cartão</Label>
+                              <Input 
+                                id="card-number" 
+                                placeholder="0000 0000 0000 0000" 
+                                className="mt-1"
+                                required
+                              />
+                            </div>
                             <div>
-                              <Label htmlFor="cardName">Nome no cartão</Label>
-                              <Input id="cardName" placeholder="Nome como aparece no cartão" required />
+                              <Label htmlFor="expiry">Data de Validade</Label>
+                              <Input 
+                                id="expiry" 
+                                placeholder="MM/AA" 
+                                className="mt-1"
+                                required
+                              />
                             </div>
-                            
                             <div>
-                              <Label htmlFor="cardNumber">Número do cartão</Label>
-                              <Input id="cardNumber" placeholder="1234 5678 9012 3456" required />
+                              <Label htmlFor="cvv">CVV</Label>
+                              <Input 
+                                id="cvv" 
+                                placeholder="123" 
+                                className="mt-1"
+                                maxLength={4}
+                                required
+                              />
                             </div>
-                            
-                            <div className="grid grid-cols-2 gap-4">
-                              <div>
-                                <Label htmlFor="expiry">Data de validade</Label>
-                                <Input id="expiry" placeholder="MM/AA" required />
-                              </div>
-                              <div>
-                                <Label htmlFor="cvv">CVV</Label>
-                                <Input id="cvv" placeholder="123" required />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {paymentMethod === 'multicaixa' && (
-                        <div className="space-y-4">
-                          <div>
-                            <Label htmlFor="phone">Número de telefone</Label>
-                            <Input id="phone" placeholder="9XX XXX XXX" required />
-                          </div>
-                          <p className="text-sm text-gray-500">
-                            Irá receber uma notificação no seu telefone para confirmar o pagamento.
-                          </p>
-                        </div>
-                      )}
-
-                      {paymentMethod === 'bank' && (
-                        <div className="space-y-4">
-                          <div className="bg-gray-50 p-4 rounded-md">
-                            <p className="font-medium">Detalhes da conta bancária:</p>
-                            <ul className="mt-2 space-y-1 text-sm">
-                              <li>Banco: BAI</li>
-                              <li>Titular: Office360 Lda</li>
-                              <li>IBAN: AO06005500000123456789014</li>
-                              <li>Referência: Incluir seu email no comprovativo</li>
-                            </ul>
-                            
-                            <div className="mt-4">
-                              <Label htmlFor="receipt">Comprovativo de pagamento</Label>
-                              <Input id="receipt" type="file" className="mt-1" />
+                            <div className="col-span-2">
+                              <Label htmlFor="name">Nome no Cartão</Label>
+                              <Input 
+                                id="name" 
+                                placeholder="Nome como aparece no cartão" 
+                                className="mt-1"
+                                required
+                              />
                             </div>
                           </div>
-                        </div>
-                      )}
-
-                      <Button 
-                        type="submit" 
-                        className="w-full mt-6 bg-darkblue hover:bg-blue-800"
-                        disabled={isProcessing}
-                      >
-                        {isProcessing ? 'Processando...' : 'Finalizar Pagamento'}
-                      </Button>
-                      
-                      <div className="mt-4 text-center text-xs text-gray-500">
-                        <p>Pagamento seguro processado por emis.ao</p>
-                        <p className="mt-1">Seus dados estão protegidos por criptografia SSL</p>
-                      </div>
-                    </form>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              <div className="col-span-1">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Resumo do Pedido</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3">
-                      {items.map((item) => (
-                        <li key={item.id} className="flex justify-between">
-                          <div>
-                            <p className="font-medium">{item.name}</p>
-                            <p className="text-sm text-gray-500">
-                              {item.quantity} × {item.users} usuários
+                          
+                          <div className="text-sm text-gray-500">
+                            <p className="flex items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                              </svg>
+                              Seus dados de pagamento estão seguros e criptografados
                             </p>
                           </div>
-                          <span className="font-medium">
-                            {(item.price * item.quantity).toLocaleString('pt-AO')} Kz
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    <div className="mt-6 border-t pt-4">
-                      <div className="flex justify-between font-medium">
-                        <span>Total</span>
-                        <span className="text-lg font-bold text-darkblue">
-                          {getTotalPrice().toLocaleString('pt-AO')} Kz
-                        </span>
-                      </div>
+                        </div>
+                      )}
+                      
+                      {/* Bank Transfer Details */}
+                      {paymentMethod === 'bank' && (
+                        <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50">
+                          <h3 className="font-medium">Detalhes da Transferência:</h3>
+                          <div className="space-y-2 text-sm">
+                            <p><span className="font-medium">Banco:</span> Banco Económico</p>
+                            <p><span className="font-medium">Titular:</span> Office360 Lda</p>
+                            <p><span className="font-medium">Conta:</span> 123456789</p>
+                            <p><span className="font-medium">IBAN:</span> AO06 0000 0000 0123 4567 8910 5</p>
+                            <p className="text-darkblue font-medium mt-4">
+                              Após a transferência, envie o comprovante para payments@office360.co.ao
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <Button 
+                        type="submit" 
+                        className="w-full bg-darkblue hover:bg-blue-800"
+                        disabled={loading}
+                      >
+                        {loading ? "Processando..." : `Pagar ${getTotalPrice().toLocaleString('pt-AO')} Kz`}
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </form>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </main>
-      <Footer />
     </div>
-  );
-};
-
-/**
- * Página de pagamento envolvida pelo CartProvider
- * Componente preparado para integração com backend PHP/Laravel e gateway emis.ao
- */
-const PaymentPage = () => {
-  return (
-    <CartProvider>
-      <PaymentContent />
-    </CartProvider>
   );
 };
 

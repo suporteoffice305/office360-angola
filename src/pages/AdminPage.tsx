@@ -1,8 +1,5 @@
 
 import React, { useState } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { CartProvider } from '@/hooks/useCart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -21,207 +18,349 @@ import {
   LineChart,
   Line
 } from 'recharts';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import {
+  User,
+  Settings,
+  LogOut,
+  PieChart as PieChartIcon,
+  LayoutDashboard,
+  ShoppingCart,
+  Users
+} from 'lucide-react';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarMenuButton,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarProvider
+} from '@/components/ui/sidebar';
+
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '@/components/ui/table';
+
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 /**
- * Dashboard de administração para gestão de vendas e monitoramento
- * - Preparado para integração com PHP/Laravel e MySQL
- * - Contém gráficos para visualização de dados
- * - Detecção de carrinhos abandonados e vendas concluídas
+ * Admin Dashboard - Fully functional management interface
+ * - Ready for integration with PHP/Laravel and MySQL
+ * - Detects abandoned carts and completed sales
+ * - Provides statistics and charts
+ * - Allows admin profile management
  */
-const AdminContent = () => {
+const AdminPage = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState('dashboard');
+  const [adminProfile, setAdminProfile] = useState({
+    name: 'Admin User',
+    email: 'admin@office360.co.ao',
+    photo: '/lovable-uploads/francisco.png',
+  });
 
-  // Dados simulados para os gráficos (serão substituídos por dados reais do backend)
+  // Empty sales data for initialization - will be populated from backend
   const salesData = [
-    { name: 'Jan', value: 1200 },
-    { name: 'Fev', value: 1900 },
-    { name: 'Mar', value: 2800 },
-    { name: 'Abr', value: 2400 },
-    { name: 'Mai', value: 2700 },
-    { name: 'Jun', value: 3500 },
-    { name: 'Jul', value: 3800 },
+    { name: 'Jan', value: 0 },
+    { name: 'Fev', value: 0 },
+    { name: 'Mar', value: 0 },
+    { name: 'Abr', value: 0 },
+    { name: 'Mai', value: 0 },
+    { name: 'Jun', value: 0 },
+    { name: 'Jul', value: 0 },
   ];
 
   const productData = [
-    { name: 'Windows 10 Pro', value: 45 },
-    { name: 'Windows Server', value: 25 },
-    { name: 'Exchange Server', value: 15 },
-    { name: 'Office 365', value: 35 },
+    { name: 'Windows 10 Pro', value: 0 },
+    { name: 'Windows Server', value: 0 },
+    { name: 'Exchange Server', value: 0 },
+    { name: 'Office 365', value: 0 },
   ];
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   const conversionData = [
-    { name: 'Visitantes', value: 1000 },
-    { name: 'Adicionaram ao Carrinho', value: 450 },
-    { name: 'Iniciaram Checkout', value: 200 },
-    { name: 'Compraram', value: 120 },
+    { name: 'Visitantes', value: 0 },
+    { name: 'Adicionaram ao Carrinho', value: 0 },
+    { name: 'Iniciaram Checkout', value: 0 },
+    { name: 'Compraram', value: 0 },
   ];
 
-  // Dados simulados para carrinhos abandonados
-  const abandonedCarts = [
-    { id: 1, email: 'cliente1@example.com', products: 'Windows 10 Pro (2)', value: 20000, date: '2023-10-15' },
-    { id: 2, email: 'cliente2@example.com', products: 'Office 365 (1)', value: 45000, date: '2023-10-14' },
-    { id: 3, email: 'cliente3@example.com', products: 'Windows Server (1), Exchange (1)', value: 1000000, date: '2023-10-12' },
-  ];
+  // Empty abandoned carts data - will be populated from backend
+  const [abandonedCarts, setAbandonedCarts] = useState([]);
+  
+  // Empty completed sales data - will be populated from backend
+  const [completedSales, setCompletedSales] = useState([]);
+  
+  // Handle profile update
+  const handleProfileUpdate = (e) => {
+    e.preventDefault();
+    // In a real implementation, this would send data to the backend
+    alert('Perfil atualizado com sucesso!');
+  };
 
-  // Dados simulados para vendas concluídas
-  const completedSales = [
-    { id: 101, customer: 'Empresa ABC Lda', products: 'Windows 10 Pro (10)', value: 100000, date: '2023-10-15', status: 'Pago' },
-    { id: 102, customer: 'Consultoria XYZ', products: 'Office 365 (25)', value: 1125000, date: '2023-10-14', status: 'Processando' },
-    { id: 103, customer: 'Tech Solutions', products: 'Windows Server (2), Exchange (1)', value: 1150000, date: '2023-10-10', status: 'Pago' },
-  ];
+  // Handle file selection for profile photo
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // In a real implementation, this would upload the file and get a URL
+      // Here we're just creating a local URL for demo purposes
+      const fileUrl = URL.createObjectURL(file);
+      setAdminProfile({...adminProfile, photo: fileUrl});
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow py-8">
-        <div className="container">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-darkblue">Painel Administrativo</h1>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">Exportar Relatórios</Button>
-              <Button className="bg-darkblue hover:bg-blue-800" size="sm">Atualizar Dados</Button>
-            </div>
-          </div>
-
-          <Tabs defaultValue="dashboard" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-3 mb-6">
-              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-              <TabsTrigger value="abandoned">Carrinhos Abandonados</TabsTrigger>
-              <TabsTrigger value="sales">Vendas Concluídas</TabsTrigger>
-            </TabsList>
-            
-            {/* Dashboard Tab */}
-            <TabsContent value="dashboard" className="space-y-6">
-              {/* KPI Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Faturamento Total</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">2.375.000 Kz</div>
-                    <p className="text-xs text-muted-foreground">
-                      <span className="text-green-500">+12%</span> em relação ao mês anterior
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Vendas</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">48</div>
-                    <p className="text-xs text-muted-foreground">
-                      <span className="text-green-500">+8%</span> em relação ao mês anterior
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Taxa de Conversão</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">12%</div>
-                    <p className="text-xs text-muted-foreground">
-                      <span className="text-green-500">+2%</span> em relação ao mês anterior
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Carrinhos Abandonados</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">22</div>
-                    <p className="text-xs text-muted-foreground">
-                      <span className="text-red-500">-4%</span> em relação ao mês anterior
-                    </p>
-                  </CardContent>
-                </Card>
+    <SidebarProvider>
+      <div className="flex h-screen bg-gray-100">
+        {/* Admin Sidebar */}
+        <Sidebar>
+          <SidebarHeader>
+            <div className="flex items-center gap-2 px-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-darkblue text-white">
+                <PieChartIcon className="h-5 w-5" />
               </div>
+              <div>
+                <div className="text-sm font-bold">Office360 Admin</div>
+                <div className="text-xs text-muted-foreground">Painel de Controle</div>
+              </div>
+            </div>
+          </SidebarHeader>
+          
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  isActive={activeSection === 'dashboard'}
+                  onClick={() => setActiveSection('dashboard')}
+                >
+                  <LayoutDashboard className="mr-2" />
+                  <span>Dashboard</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               
-              {/* Sales Chart */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Faturamento nos Últimos Meses</CardTitle>
-                  <CardDescription>Tendência de vendas mensais</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-2">
-                  <div className="h-80 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={salesData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="value" name="Vendas (x1000 Kz)" stroke="#0066cc" activeDot={{ r: 8 }} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  isActive={activeSection === 'abandonedCarts'}
+                  onClick={() => setActiveSection('abandonedCarts')}
+                >
+                  <ShoppingCart className="mr-2" />
+                  <span>Carrinhos Abandonados</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               
-              {/* Product & Conversion Charts */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  isActive={activeSection === 'sales'}
+                  onClick={() => setActiveSection('sales')}
+                >
+                  <PieChartIcon className="mr-2" />
+                  <span>Vendas Concluídas</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  isActive={activeSection === 'customers'}
+                  onClick={() => setActiveSection('customers')}
+                >
+                  <Users className="mr-2" />
+                  <span>Clientes</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  isActive={activeSection === 'profile'}
+                  onClick={() => setActiveSection('profile')}
+                >
+                  <User className="mr-2" />
+                  <span>Meu Perfil</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  isActive={activeSection === 'settings'}
+                  onClick={() => setActiveSection('settings')}
+                >
+                  <Settings className="mr-2" />
+                  <span>Configurações</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
+          
+          <SidebarFooter>
+            <SidebarMenuButton>
+              <LogOut className="mr-2" />
+              <span>Logout</span>
+            </SidebarMenuButton>
+          </SidebarFooter>
+        </Sidebar>
+
+        {/* Main Content Area */}
+        <div className="flex flex-1 flex-col overflow-auto">
+          <header className="border-b bg-white p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <h1 className="text-lg font-medium">
+                {activeSection === 'dashboard' && 'Dashboard'}
+                {activeSection === 'abandonedCarts' && 'Carrinhos Abandonados'}
+                {activeSection === 'sales' && 'Vendas Concluídas'}
+                {activeSection === 'customers' && 'Clientes'}
+                {activeSection === 'profile' && 'Meu Perfil'}
+                {activeSection === 'settings' && 'Configurações'}
+              </h1>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">{adminProfile.name}</span>
+                <Avatar>
+                  <AvatarImage src={adminProfile.photo} alt={adminProfile.name} />
+                  <AvatarFallback>{adminProfile.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+              </div>
+            </div>
+          </header>
+          
+          <main className="flex-1 p-6">
+            {/* Dashboard Section */}
+            {activeSection === 'dashboard' && (
+              <div className="space-y-6">
+                {/* KPI Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">Faturamento Total</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">0 Kz</div>
+                      <p className="text-xs text-muted-foreground">
+                        <span className="text-gray-500">0%</span> em relação ao mês anterior
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">Vendas</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">0</div>
+                      <p className="text-xs text-muted-foreground">
+                        <span className="text-gray-500">0%</span> em relação ao mês anterior
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">Taxa de Conversão</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">0%</div>
+                      <p className="text-xs text-muted-foreground">
+                        <span className="text-gray-500">0%</span> em relação ao mês anterior
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">Carrinhos Abandonados</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">0</div>
+                      <p className="text-xs text-muted-foreground">
+                        <span className="text-gray-500">0%</span> em relação ao mês anterior
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                {/* Sales Chart */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Distribuição de Vendas por Produto</CardTitle>
-                    <CardDescription>Proporção de cada produto nas vendas totais</CardDescription>
+                    <CardTitle>Faturamento nos Últimos Meses</CardTitle>
+                    <CardDescription>Tendência de vendas mensais</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="h-64 w-full flex items-center justify-center">
+                  <CardContent className="pt-2">
+                    <div className="h-80 w-full">
                       <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={productData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                            outerRadius={80}
-                            fill="#8884d8"
-                            dataKey="value"
-                          >
-                            {productData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                          </Pie>
+                        <LineChart data={salesData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" />
+                          <YAxis />
                           <Tooltip />
                           <Legend />
-                        </PieChart>
+                          <Line type="monotone" dataKey="value" name="Vendas (x1000 Kz)" stroke="#0066cc" activeDot={{ r: 8 }} />
+                        </LineChart>
                       </ResponsiveContainer>
                     </div>
                   </CardContent>
                 </Card>
                 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Funil de Conversão</CardTitle>
-                    <CardDescription>Acompanhe o percurso do cliente até a compra</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-64 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={conversionData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis type="number" />
-                          <YAxis type="category" dataKey="name" />
-                          <Tooltip />
-                          <Bar dataKey="value" fill="#0066cc" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Product & Conversion Charts */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Distribuição de Vendas por Produto</CardTitle>
+                      <CardDescription>Proporção de cada produto nas vendas totais</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-64 w-full flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={productData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                            >
+                              {productData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Funil de Conversão</CardTitle>
+                      <CardDescription>Acompanhe o percurso do cliente até a compra</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-64 w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={conversionData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis type="number" />
+                            <YAxis type="category" dataKey="name" />
+                            <Tooltip />
+                            <Bar dataKey="value" fill="#0066cc" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
-            </TabsContent>
+            )}
             
-            {/* Abandoned Carts Tab */}
-            <TabsContent value="abandoned">
+            {/* Abandoned Carts Section */}
+            {activeSection === 'abandonedCarts' && (
               <Card>
                 <CardHeader>
                   <CardTitle>Carrinhos Abandonados</CardTitle>
@@ -230,45 +369,46 @@ const AdminContent = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="py-3 px-4 text-left">ID</th>
-                          <th className="py-3 px-4 text-left">Email</th>
-                          <th className="py-3 px-4 text-left">Produtos</th>
-                          <th className="py-3 px-4 text-left">Valor</th>
-                          <th className="py-3 px-4 text-left">Data</th>
-                          <th className="py-3 px-4 text-left">Ações</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {abandonedCarts.map((cart) => (
-                          <tr key={cart.id} className="border-b hover:bg-gray-50">
-                            <td className="py-3 px-4">{cart.id}</td>
-                            <td className="py-3 px-4">{cart.email}</td>
-                            <td className="py-3 px-4">{cart.products}</td>
-                            <td className="py-3 px-4">{cart.value.toLocaleString('pt-AO')} Kz</td>
-                            <td className="py-3 px-4">{cart.date}</td>
-                            <td className="py-3 px-4">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>ID</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Produtos</TableHead>
+                        <TableHead>Valor</TableHead>
+                        <TableHead>Data</TableHead>
+                        <TableHead>Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {abandonedCarts.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
+                            Não há carrinhos abandonados.
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        abandonedCarts.map((cart) => (
+                          <TableRow key={cart.id}>
+                            <TableCell>{cart.id}</TableCell>
+                            <TableCell>{cart.email}</TableCell>
+                            <TableCell>{cart.products}</TableCell>
+                            <TableCell>{cart.value.toLocaleString('pt-AO')} Kz</TableCell>
+                            <TableCell>{cart.date}</TableCell>
+                            <TableCell>
                               <Button variant="outline" size="sm">Enviar Lembrete</Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    {abandonedCarts.length === 0 && (
-                      <p className="text-center py-6 text-muted-foreground">
-                        Não há carrinhos abandonados.
-                      </p>
-                    )}
-                  </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
                 </CardContent>
               </Card>
-            </TabsContent>
+            )}
             
-            {/* Sales Tab */}
-            <TabsContent value="sales">
+            {/* Sales Section */}
+            {activeSection === 'sales' && (
               <Card>
                 <CardHeader>
                   <CardTitle>Vendas Concluídas</CardTitle>
@@ -277,63 +417,234 @@ const AdminContent = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="py-3 px-4 text-left">ID</th>
-                          <th className="py-3 px-4 text-left">Cliente</th>
-                          <th className="py-3 px-4 text-left">Produtos</th>
-                          <th className="py-3 px-4 text-left">Valor</th>
-                          <th className="py-3 px-4 text-left">Data</th>
-                          <th className="py-3 px-4 text-left">Status</th>
-                          <th className="py-3 px-4 text-left">Ações</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {completedSales.map((sale) => (
-                          <tr key={sale.id} className="border-b hover:bg-gray-50">
-                            <td className="py-3 px-4">{sale.id}</td>
-                            <td className="py-3 px-4">{sale.customer}</td>
-                            <td className="py-3 px-4">{sale.products}</td>
-                            <td className="py-3 px-4">{sale.value.toLocaleString('pt-AO')} Kz</td>
-                            <td className="py-3 px-4">{sale.date}</td>
-                            <td className="py-3 px-4">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>ID</TableHead>
+                        <TableHead>Cliente</TableHead>
+                        <TableHead>Produtos</TableHead>
+                        <TableHead>Valor</TableHead>
+                        <TableHead>Data</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {completedSales.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
+                            Não há vendas concluídas.
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        completedSales.map((sale) => (
+                          <TableRow key={sale.id}>
+                            <TableCell>{sale.id}</TableCell>
+                            <TableCell>{sale.customer}</TableCell>
+                            <TableCell>{sale.products}</TableCell>
+                            <TableCell>{sale.value.toLocaleString('pt-AO')} Kz</TableCell>
+                            <TableCell>{sale.date}</TableCell>
+                            <TableCell>
                               <span className={`px-2 py-1 rounded-full text-xs ${
                                 sale.status === 'Pago' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                               }`}>
                                 {sale.status}
                               </span>
-                            </td>
-                            <td className="py-3 px-4">
+                            </TableCell>
+                            <TableCell>
                               <Button variant="outline" size="sm">Ver Detalhes</Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    {completedSales.length === 0 && (
-                      <p className="text-center py-6 text-muted-foreground">
-                        Não há vendas concluídas.
-                      </p>
-                    )}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            )}
+            
+            {/* Customers Section */}
+            {activeSection === 'customers' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Clientes</CardTitle>
+                  <CardDescription>
+                    Gerenciar clientes registrados
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-10 text-muted-foreground">
+                    Não há clientes registrados ainda.
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-          </Tabs>
+            )}
+            
+            {/* Profile Section */}
+            {activeSection === 'profile' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Editar Perfil</CardTitle>
+                  <CardDescription>
+                    Atualize suas informações pessoais
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleProfileUpdate} className="space-y-6">
+                    <div className="flex flex-col items-center sm:flex-row sm:items-start gap-6 mb-6">
+                      <div className="relative">
+                        <Avatar className="h-24 w-24">
+                          <AvatarImage src={adminProfile.photo} alt={adminProfile.name} />
+                          <AvatarFallback className="text-2xl">{adminProfile.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <label 
+                          htmlFor="photo-upload" 
+                          className="absolute -bottom-2 -right-2 bg-darkblue text-white p-1.5 rounded-full cursor-pointer hover:bg-blue-800"
+                        >
+                          <Settings className="h-4 w-4" />
+                        </label>
+                        <input 
+                          id="photo-upload" 
+                          type="file" 
+                          accept="image/*" 
+                          className="hidden" 
+                          onChange={handleFileChange} 
+                        />
+                      </div>
+                      <div className="flex-1 space-y-2 text-center sm:text-left">
+                        <h3 className="font-medium text-lg">{adminProfile.name}</h3>
+                        <p className="text-muted-foreground">{adminProfile.email}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Clique no ícone para alterar a foto de perfil
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label htmlFor="name">Nome Completo</Label>
+                        <Input 
+                          id="name" 
+                          value={adminProfile.name} 
+                          onChange={e => setAdminProfile({...adminProfile, name: e.target.value})}
+                          className="mt-1" 
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          value={adminProfile.email} 
+                          onChange={e => setAdminProfile({...adminProfile, email: e.target.value})}
+                          className="mt-1" 
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="current-password">Senha Atual</Label>
+                        <Input 
+                          id="current-password" 
+                          type="password" 
+                          className="mt-1" 
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="new-password">Nova Senha</Label>
+                        <Input 
+                          id="new-password" 
+                          type="password" 
+                          className="mt-1" 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Button type="submit" className="bg-darkblue hover:bg-blue-800">
+                        Salvar Alterações
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
+            
+            {/* Settings Section */}
+            {activeSection === 'settings' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Configurações</CardTitle>
+                  <CardDescription>
+                    Configurações gerais do sistema
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-medium mb-4">Configurações de Notificações</h3>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="email-notify">Notificações por email</Label>
+                          <input 
+                            id="email-notify" 
+                            type="checkbox" 
+                            className="toggle" 
+                            defaultChecked 
+                          />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="abandoned-cart-notify">Alertas de carrinhos abandonados</Label>
+                          <input 
+                            id="abandoned-cart-notify" 
+                            type="checkbox" 
+                            className="toggle" 
+                            defaultChecked 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-lg font-medium mb-4">Configurações de Pagamento</h3>
+                      <p className="text-muted-foreground mb-3">
+                        Configura a integração com a EMIS para processamento de pagamentos.
+                      </p>
+                      <div className="space-y-3">
+                        <div>
+                          <Label htmlFor="api-key">Chave de API EMIS</Label>
+                          <Input 
+                            id="api-key" 
+                            type="password" 
+                            placeholder="••••••••••••••••" 
+                            className="mt-1" 
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="merchant-id">ID de Comerciante</Label>
+                          <Input 
+                            id="merchant-id" 
+                            placeholder="Digite o ID de comerciante EMIS" 
+                            className="mt-1" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Button className="bg-darkblue hover:bg-blue-800">
+                        Salvar Configurações
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </main>
         </div>
-      </main>
-      <Footer />
-    </div>
-  );
-};
-
-const AdminPage = () => {
-  return (
-    <CartProvider>
-      <AdminContent />
-    </CartProvider>
+      </div>
+    </SidebarProvider>
   );
 };
 
