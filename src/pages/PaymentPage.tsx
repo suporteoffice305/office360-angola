@@ -41,8 +41,8 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="container py-16">
+    <div className="min-h-screen bg-gray-50 py-16">
+      <main className="container max-w-6xl mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-bold text-darkblue">Finalizar Compra</h1>

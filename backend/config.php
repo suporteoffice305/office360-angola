@@ -1,3 +1,4 @@
+
 <?php
 define('GPO_FRAME_TOKEN', 'a53787fd-b49e-4469-a6ab-fa6acf19db48');
 define('GPO_API_URL', 'https://pagamentonline.emis.co.ao/online-payment-gateway/portal/frameToken');
@@ -11,7 +12,7 @@ function getGpoPurchaseToken(string $reference, float $amount): string {
         'mobile'      => 'AUTHORIZATION',
         'card'        => 'AUTHORIZATION',
         'qrCode'        => 'PAYMENT',
-        'callbackUrl' => 'https://deve.angohost.net/gpo/gpo-callback.php',
+        'callbackUrl' => 'https://office.it.ao/gpo/gpo-callback.php',
         'cssUrl'      => GPO_CSS_URL
     ];
 
