@@ -19,16 +19,24 @@ const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amou
         body: JSON.stringify({ reference, amount }),
       });
 
-      // Se o backend redirecionar, abra a URL do redirecionamento
       if (response.redirected) {
         window.open(response.url, '_blank', 'width=800,height=700');
-      } else {
+        return;
+      }
+
+      // Só tenta ler JSON se o header indicar que é JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
         if (data?.token) {
           window.open(`/api/gpo-frame?token=${encodeURIComponent(data.token)}`, '_blank', 'width=800,height=700');
         } else {
           alert('Erro ao iniciar pagamento: ' + (data?.error || 'Erro desconhecido'));
         }
+      } else {
+        // Se não for JSON, mostra erro genérico
+        const text = await response.text();
+        alert('Erro inesperado do servidor: ' + text);
       }
     } catch (err: any) {
       alert('Erro ao processar pagamento: ' + err.message);
