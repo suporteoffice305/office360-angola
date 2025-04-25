@@ -179,10 +179,11 @@ const PaymentPage = () => {
 export default PaymentPage;
 
 
+// Função que envia o formulário para a API Next.js
 const submitExpressPayment = (reference: string, amount: number) => {
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = '/backend/pagar.php';
+  form.action = '/api/pagar'; // Usando a nova rota API do Next.js
   form.target = '_blank';
 
   const refInput = document.createElement('input');

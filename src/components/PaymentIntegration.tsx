@@ -15,9 +15,8 @@ const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amou
     const form = document.createElement('form');
     form.method = 'POST';
     
-    // When using Next.js API routes on Vercel, replace this with:
-    // form.action = '/api/pagar';
-    form.action = '/backend/pagar.php'; // Keep this for now until migrated to Next.js
+    // Use Next.js API routes on Vercel
+    form.action = '/api/pagar';
     
     form.target = '_blank';
 
