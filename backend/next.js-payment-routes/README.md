@@ -31,13 +31,27 @@ Certifique-se que os seguintes arquivos estão na pasta correta no seu projeto N
 1. Faça login no [dashboard da Vercel](https://vercel.com)
 2. Importe seu projeto do repositório Git
 3. Na configuração do projeto, defina as variáveis de ambiente:
-   - `GPO_FRAME_TOKEN` - (Opcional, está hardcoded no arquivo de utilidades)
-   - `GPO_API_URL` - (Opcional, está hardcoded no arquivo de utilidades)
+   - `GPO_FRAME_TOKEN` - Token de integração do gateway (opcional, está hardcoded)
+   - `GPO_API_URL` - URL da API do gateway (opcional, está hardcoded)
    - `CALLBACK_URL` - URL completa do seu endpoint de callback
 
-4. Clique em "Deploy" para iniciar o deployment
+4. Defina as seguintes configurações no seu projeto Vercel:
+   - **Root Directory**: Se seus arquivos estiverem em uma subpasta, especifique o caminho aqui
+   - **Build Command**: `npm run build` ou `next build`
+   - **Output Directory**: `.next`
 
-### 3. Verificação
+5. Clique em "Deploy" para iniciar o deployment
+
+### 3. Solução de Problemas Comuns
+
+Se aparecer erro 404 (NOT_FOUND) ao tentar acessar `/api/pagar`, verifique:
+
+1. Confirme que os arquivos estão na estrutura correta (dentro de `pages/api/`)
+2. Verifique que o domínio está correto (use URL completo como `https://seu-site.vercel.app/api/pagar`)
+3. Confirme que o deployment foi bem-sucedido sem erros de build
+4. Verifique os logs do servidor na dashboard da Vercel para identificar possíveis erros
+
+### 4. Teste e Verificação
 
 Após o deployment, verifique se todas as rotas estão funcionando:
 
@@ -47,19 +61,7 @@ Após o deployment, verifique se todas as rotas estão funcionando:
 
 ## Integração com o Frontend React
 
-O componente PaymentPage.tsx do frontend React já está configurado para enviar os dados para `/api/pagar`, que abrirá em uma nova aba.
+No frontend, configure o componente PaymentIntegration.tsx para enviar o formulário para a URL completa:
+`form.action = 'https://seu-site.vercel.app/api/pagar';`
 
-## Solução de Problemas
-
-Se a integração não estiver funcionando, verifique:
-
-1. Logs da Vercel para erros de API
-2. Se o token GPO_FRAME_TOKEN está correto
-3. Se a URL de callback está corretamente configurada 
-4. Se as requisições estão sendo enviadas corretamente do frontend
-
-## Segurança
-
-- Todo o processamento de pagamento ocorre no lado do servidor
-- As credenciais não são expostas no frontend
-- A comunicação com o gateway usa HTTPS
+Substitua "seu-site.vercel.app" pelo domínio real do seu projeto na Vercel.

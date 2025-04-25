@@ -15,7 +15,7 @@ const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amou
     // Create a form element
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/api/pagar';
+    form.action = 'https://office.it.ao/api/pagar'; // URL completo para o gateway
     form.target = '_blank'; // Open in new tab
     
     // Create and append reference input
@@ -36,6 +36,8 @@ const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amou
     document.body.appendChild(form);
     form.submit();
     document.body.removeChild(form);
+    
+    console.log(`Enviando pagamento: Referência ${reference}, Valor ${amount}`);
   };
 
   return (

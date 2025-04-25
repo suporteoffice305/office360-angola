@@ -18,6 +18,8 @@ export async function getGpoPurchaseToken(reference, amount) {
     cssUrl: GPO_CSS_URL
   };
 
+  console.log('Enviando requisição para o gateway:', JSON.stringify(payload));
+
   try {
     const response = await fetch(GPO_API_URL, {
       method: 'POST',
@@ -28,11 +30,16 @@ export async function getGpoPurchaseToken(reference, amount) {
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Erro na resposta da API:', response.status, errorText);
       throw new Error(`API error: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
+    console.log('Resposta do gateway:', data);
+    
     if (!data.id) {
+      console.error('Resposta sem ID:', data);
       throw new Error(`GPO error: ${JSON.stringify(data)}`);
     }
 

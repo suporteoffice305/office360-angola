@@ -14,6 +14,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Log the request for debugging
+    console.log(`Processando pagamento: Ref ${reference}, Valor ${amount}`);
+    
     // Get purchase token
     const token = await getGpoPurchaseToken(reference, parseFloat(amount));
     

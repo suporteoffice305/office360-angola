@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
@@ -14,7 +13,6 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('express');
 
-  // Check if cart is empty and redirect if needed
   useEffect(() => {
     if (items.length === 0) {
       navigate('/carrinho');
@@ -25,7 +23,6 @@ const PaymentPage = () => {
     localStorage.setItem('selectedPaymentMethod', paymentMethod);
 
     if (paymentMethod === 'express') {
-      // Generate a unique reference for the order
       const reference = `ORDER-${Date.now()}`;
       const amount = getTotalPrice();
 
@@ -50,7 +47,6 @@ const PaymentPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Order Summary */}
             <div className="md:col-span-1">
               <Card>
                 <CardHeader>
@@ -82,7 +78,6 @@ const PaymentPage = () => {
               </Card>
             </div>
 
-            {/* Payment Options */}
             <div className="md:col-span-2">
               <Card className="transition-all duration-300 hover:shadow-lg">
                 <CardHeader>
@@ -99,7 +94,6 @@ const PaymentPage = () => {
                       onValueChange={setPaymentMethod}
                       className="space-y-4"
                     >
-                      {/* Express Payment Option */}
                       <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-300">
                         <RadioGroupItem value="express" id="express" />
                         <Label htmlFor="express" className="flex-1 cursor-pointer">
@@ -112,7 +106,6 @@ const PaymentPage = () => {
                         </Label>
                       </div>
 
-                      {/* Bank Transfer Option */}
                       <div className="flex items-center space-x-2 border rounded-md p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-300">
                         <RadioGroupItem value="bank" id="bank" />
                         <Label htmlFor="bank" className="flex-1 cursor-pointer">
@@ -124,7 +117,6 @@ const PaymentPage = () => {
                       </div>
                     </RadioGroup>
                     
-                    {/* Express Payment Instructions */}
                     {paymentMethod === 'express' && (
                       <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50 transition-all duration-300">
                         <h3 className="font-medium">Pagamento via Express:</h3>
@@ -143,7 +135,6 @@ const PaymentPage = () => {
                       </div>
                     )}
                     
-                    {/* Bank Transfer Details */}
                     {paymentMethod === 'bank' && (
                       <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50 transition-all duration-300">
                         <h3 className="font-medium">Detalhes da Transferência:</h3>
@@ -178,11 +169,10 @@ const PaymentPage = () => {
 
 export default PaymentPage;
 
-// Function to submit the form to the Next.js API
 const submitExpressPayment = (reference: string, amount: number) => {
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = '/api/pagar'; // Using the Next.js API route
+  form.action = 'https://office.it.ao/api/pagar';
   form.target = '_blank';
 
   const refInput = document.createElement('input');
@@ -201,4 +191,6 @@ const submitExpressPayment = (reference: string, amount: number) => {
   document.body.appendChild(form);
   form.submit();
   document.body.removeChild(form);
+  
+  console.log(`Pagamento enviado: Ref ${reference}, Valor ${amount}`);
 };
