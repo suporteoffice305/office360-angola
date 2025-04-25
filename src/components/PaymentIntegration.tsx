@@ -12,27 +12,27 @@ interface PaymentIntegrationProps {
  */
 const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amount }) => {
   const submitPayment = () => {
+    // Create a form element
     const form = document.createElement('form');
     form.method = 'POST';
-    
-    // Use Next.js API routes on Vercel
     form.action = '/api/pagar';
+    form.target = '_blank'; // Open in new tab
     
-    form.target = '_blank';
-
+    // Create and append reference input
     const refInput = document.createElement('input');
     refInput.type = 'hidden';
     refInput.name = 'reference';
     refInput.value = reference;
-
+    form.appendChild(refInput);
+    
+    // Create and append amount input
     const amountInput = document.createElement('input');
     amountInput.type = 'hidden';
     amountInput.name = 'amount';
     amountInput.value = amount.toString();
-
-    form.appendChild(refInput);
     form.appendChild(amountInput);
-
+    
+    // Append form to body, submit it, then remove it
     document.body.appendChild(form);
     form.submit();
     document.body.removeChild(form);

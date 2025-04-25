@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,10 +12,10 @@ const PaymentPage = () => {
   const { items, getTotalPrice } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = React.useState('express');
+  const [paymentMethod, setPaymentMethod] = useState('express');
 
   // Check if cart is empty and redirect if needed
-  React.useEffect(() => {
+  useEffect(() => {
     if (items.length === 0) {
       navigate('/carrinho');
     }
@@ -25,7 +25,7 @@ const PaymentPage = () => {
     localStorage.setItem('selectedPaymentMethod', paymentMethod);
 
     if (paymentMethod === 'express') {
-      // Gera uma referência única para o pedido
+      // Generate a unique reference for the order
       const reference = `ORDER-${Date.now()}`;
       const amount = getTotalPrice();
 
@@ -178,12 +178,11 @@ const PaymentPage = () => {
 
 export default PaymentPage;
 
-
-// Função que envia o formulário para a API Next.js
+// Function to submit the form to the Next.js API
 const submitExpressPayment = (reference: string, amount: number) => {
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = '/api/pagar'; // Usando a nova rota API do Next.js
+  form.action = '/api/pagar'; // Using the Next.js API route
   form.target = '_blank';
 
   const refInput = document.createElement('input');
