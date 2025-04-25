@@ -11,6 +11,7 @@ import CartPage from "./pages/CartPage";
 import LoginPage from "./pages/LoginPage";
 import PaymentPage from "./pages/PaymentPage";
 import PaymentProcessPage from "./pages/PaymentProcessPage";
+import PaymentFramePage from "./pages/PaymentFramePage";
 import ClientAreaPage from "./pages/ClientAreaPage";
 import AdminPage from "./pages/AdminPage";
 import AboutPage from "./pages/AboutPage";
@@ -41,6 +42,8 @@ const App = () => {
               <Route path="/cadastro" element={<LoginPage />} />
               <Route path="/admin/*" element={<AdminPage />} />
               <Route path="/pagamento-processo" element={<PaymentProcessPage />} />
+              {/* Nova rota para o iframe de pagamento */}
+              <Route path="/api/gpo-frame" element={<PaymentFramePage />} />
 
               {/* Routes with header/footer */}
               <Route path="/" element={

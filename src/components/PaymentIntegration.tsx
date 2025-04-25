@@ -12,30 +12,10 @@ interface PaymentIntegrationProps {
  */
 const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amount }) => {
   const submitPayment = () => {
-    // Create a form element
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'https://office.it.ao/api/pagar'; // URL completo para o gateway
-    form.target = '_blank'; // Open in new tab
+    // Abrimos diretamente uma nova janela com o iframe de pagamento
+    const paymentUrl = `/api/gpo-frame?reference=${encodeURIComponent(reference)}&amount=${encodeURIComponent(amount)}`;
     
-    // Create and append reference input
-    const refInput = document.createElement('input');
-    refInput.type = 'hidden';
-    refInput.name = 'reference';
-    refInput.value = reference;
-    form.appendChild(refInput);
-    
-    // Create and append amount input
-    const amountInput = document.createElement('input');
-    amountInput.type = 'hidden';
-    amountInput.name = 'amount';
-    amountInput.value = amount.toString();
-    form.appendChild(amountInput);
-    
-    // Append form to body, submit it, then remove it
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
+    window.open(paymentUrl, '_blank', 'width=800,height=700');
     
     console.log(`Enviando pagamento: Referência ${reference}, Valor ${amount}`);
   };

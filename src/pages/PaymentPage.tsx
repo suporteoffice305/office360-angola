@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import PaymentIntegration from '@/components/PaymentIntegration';
 
 const PaymentPage = () => {
   const { items, getTotalPrice } = useCart();
@@ -26,11 +28,10 @@ const PaymentPage = () => {
       const reference = `ORDER-${Date.now()}`;
       const amount = getTotalPrice();
 
-      submitExpressPayment(reference, amount);
-
+      // Nada a fazer aqui, o botão do componente PaymentIntegration vai lidar com isso
       toast({
-        title: "Pagamento iniciado",
-        description: "Uma nova janela foi aberta para processamento do pagamento.",
+        title: "Processando pagamento",
+        description: "Clique em 'Processar Pagamento' para abrir a janela de pagamento.",
       });
     } else {
       navigate('/pagamento-processo');
@@ -121,8 +122,8 @@ const PaymentPage = () => {
                       <div className="space-y-4 mt-6 border rounded-md p-4 bg-gray-50 transition-all duration-300">
                         <h3 className="font-medium">Pagamento via Express:</h3>
                         <p className="text-sm text-gray-600">
-                          Ao clicar em "Continuar", você será redirecionado para a plataforma Express 
-                          para completar seu pagamento de forma segura.
+                          Clique em "Processar Pagamento" para ser redirecionado para a plataforma Express 
+                          e completar seu pagamento de forma segura.
                         </p>
                         <div className="text-sm text-gray-500">
                           <p className="flex items-center">
@@ -132,6 +133,11 @@ const PaymentPage = () => {
                             Transação segura e processada pela Express
                           </p>
                         </div>
+                        
+                        <PaymentIntegration 
+                          reference={`ORDER-${Date.now()}`}
+                          amount={getTotalPrice()}
+                        />
                       </div>
                     )}
                     
@@ -147,15 +153,15 @@ const PaymentPage = () => {
                             Após a transferência, envie o comprovante para payments@office360.co.ao
                           </p>
                         </div>
+                        
+                        <Button 
+                          className="w-full bg-darkblue hover:bg-blue-800 transition-all duration-300 transform hover:scale-[1.02]"
+                          onClick={handleProceedToPayment}
+                        >
+                          Continuar
+                        </Button>
                       </div>
                     )}
-                    
-                    <Button 
-                      className="w-full bg-darkblue hover:bg-blue-800 transition-all duration-300 transform hover:scale-[1.02]"
-                      onClick={handleProceedToPayment}
-                    >
-                      Continuar
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -168,29 +174,3 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
-
-const submitExpressPayment = (reference: string, amount: number) => {
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://office.it.ao/api/pagar';
-  form.target = '_blank';
-
-  const refInput = document.createElement('input');
-  refInput.type = 'hidden';
-  refInput.name = 'reference';
-  refInput.value = reference;
-
-  const amountInput = document.createElement('input');
-  amountInput.type = 'hidden';
-  amountInput.name = 'amount';
-  amountInput.value = amount.toString();
-
-  form.appendChild(refInput);
-  form.appendChild(amountInput);
-
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
-  
-  console.log(`Pagamento enviado: Ref ${reference}, Valor ${amount}`);
-};
