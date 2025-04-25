@@ -8,9 +8,7 @@ const PaymentProcessPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if there's a selected payment method
     const paymentMethod = localStorage.getItem('selectedPaymentMethod');
-    
     if (!paymentMethod) {
       toast({
         title: "Erro no processo de pagamento",
@@ -25,9 +23,6 @@ const PaymentProcessPage = () => {
       title: "Redirecionando para o processamento de pagamento",
       description: `Método selecionado: ${paymentMethod === 'express' ? 'Express' : 'Transferência Bancária'}`,
     });
-
-    // This is a placeholder page - the actual payment processing will happen in the PHP page
-    // The user will implement the actual form in PHP
   }, [toast, navigate]);
 
   return (

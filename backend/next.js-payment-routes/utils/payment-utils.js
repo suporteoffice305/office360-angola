@@ -5,47 +5,37 @@ const GPO_FRAME_TOKEN = 'a53787fd-b49e-4469-a6ab-fa6acf19db48';
 const GPO_API_URL = 'https://pagamentonline.emis.co.ao/online-payment-gateway/portal/frameToken';
 const GPO_CSS_URL = 'https://pagamentonline.emis.co.ao/gpoconfig/qr_code_mobile_v2.css';
 
-// Versão em JavaScript da função getGpoPurchaseToken do PHP
 export async function getGpoPurchaseToken(reference, amount) {
   const payload = {
-    reference: reference,
-    amount: amount.toFixed(2),
+    reference: String(reference),
+    amount: Number(amount).toFixed(2),
     token: GPO_FRAME_TOKEN,
-    mobile: 'AUTHORIZATION',
-    card: 'AUTHORIZATION',
-    qrCode: 'PAYMENT',
-    callbackUrl: 'https://office.it.ao/api/gpo-callback', // Atualize para URL da Vercel
-    cssUrl: GPO_CSS_URL
+    callbackUrl: 'https://office.it.ao/api/gpo-callback',
+    cssUrl: GPO_CSS_URL,
+    // Os métodos abaixo devem ser enviados apenas se sua conta EMIS estiver habilitada para eles
+    mobile: 'AUTHORIZATION', // ou 'PAYMENT' se for o caso
+    card: 'AUTHORIZATION',   // ou 'PAYMENT'
+    qrCode: 'PAYMENT'        // ou 'AUTHORIZATION'
   };
-
-  console.log('Enviando requisição para o gateway:', JSON.stringify(payload));
 
   try {
     const response = await fetch(GPO_API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Erro na resposta da API:', response.status, errorText);
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
+      throw new Error(`API error: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();
-    console.log('Resposta do gateway:', data);
-    
     if (!data.id) {
-      console.error('Resposta sem ID:', data);
       throw new Error(`GPO error: ${JSON.stringify(data)}`);
     }
-
     return data.id;
   } catch (error) {
-    console.error('Error in getGpoPurchaseToken:', error);
     throw error;
   }
 }

@@ -12,11 +12,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log(`Processando pagamento: Ref ${reference}, Valor ${amount}`);
     const token = await getGpoPurchaseToken(reference, parseFloat(amount));
     res.redirect(302, `/api/gpo-frame?token=${encodeURIComponent(token)}`);
   } catch (error) {
-    console.error('Erro ao processar pagamento:', error);
     res.status(500).json({ error: `Erro: ${error.message}` });
   }
 }

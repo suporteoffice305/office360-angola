@@ -6,10 +6,6 @@ interface PaymentIntegrationProps {
   amount: number;
 }
 
-/**
- * Component to handle Express payment integration
- * This component is used to submit payment requests to the payment gateway
- */
 const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amount }) => {
   const submitPayment = async () => {
     try {
@@ -24,7 +20,6 @@ const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amou
         return;
       }
 
-      // Só tenta ler JSON se o header indicar que é JSON
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
@@ -34,7 +29,6 @@ const PaymentIntegration: React.FC<PaymentIntegrationProps> = ({ reference, amou
           alert('Erro ao iniciar pagamento: ' + (data?.error || 'Erro desconhecido'));
         }
       } else {
-        // Se não for JSON, mostra erro genérico
         const text = await response.text();
         alert('Erro inesperado do servidor: ' + text);
       }

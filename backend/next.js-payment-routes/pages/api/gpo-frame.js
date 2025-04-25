@@ -1,12 +1,12 @@
 
 export default function handler(req, res) {
   const { token } = req.query;
-  
+
   if (!token) {
     res.status(400).send("Token não especificado.");
     return;
   }
-  
+
   const htmlContent = `<!DOCTYPE html>
 <html lang="pt">
 <head>

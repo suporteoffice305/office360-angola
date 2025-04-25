@@ -4,7 +4,7 @@ import path from 'path';
 
 export const config = {
   api: {
-    bodyParser: false, // Disable the default body parser
+    bodyParser: false,
   },
 };
 
@@ -15,7 +15,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get raw request body
     const chunks = [];
     for await (const chunk of req) {
       chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
@@ -23,25 +22,10 @@ export default async function handler(req, res) {
     const buffer = Buffer.concat(chunks);
     const rawBody = buffer.toString('utf8');
 
-    // Log the callback data
-    const logEntry = `${new Date().toISOString()} - Dados recebidos:\n${rawBody}\n\n`;
-    
-    // In production on Vercel, you should use a proper logging service instead of file writes
-    // This is just for demonstration - file writes won't persist on Vercel's serverless functions
-    const logPath = path.join(process.cwd(), 'gpo_callback_log.txt');
-    
-    // For Vercel, use a logging service instead of local file writes
-    console.log('GPO Callback received:', logEntry);
-    
-    // Attempt to write to file (won't work in production on Vercel)
-    try {
-      fs.appendFileSync(logPath, logEntry);
-    } catch (writeError) {
-      console.error('Error writing to log file:', writeError);
-      // In production, you'd send this to a logging service or database
-    }
+    // Log only to console (Vercel does not persist files)
+    console.log('GPO Callback received:', rawBody);
 
-    // Send OK response as required by the payment gateway
+    // Always respond 200 OK to EMIS
     res.status(200).send('OK');
   } catch (error) {
     console.error('Error processing callback:', error);
