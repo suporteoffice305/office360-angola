@@ -7,13 +7,14 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import PaymentIntegration from '@/components/PaymentIntegration';
+import { formatPrice } from '@/utils/formatters';
 
 const PaymentPage = () => {
   const { items, getTotalPrice } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('express');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (items.length === 0) {
@@ -21,20 +22,42 @@ const PaymentPage = () => {
     }
   }, [items, navigate]);
 
-  const handleProceedToPayment = () => {
-    localStorage.setItem('selectedPaymentMethod', paymentMethod);
-
-    if (paymentMethod === 'express') {
+  const handleProcessPayment = async () => {
+    setIsProcessing(true);
+    
+    try {
       const reference = `ORDER-${Date.now()}`;
-      const amount = getTotalPrice();
-
-      // Nada a fazer aqui, o botão do componente PaymentIntegration vai lidar com isso
+      
+      // Process Express payment
+      if (paymentMethod === 'express') {
+        // This would normally make a request to your backend
+        // Simulating a call to the backend to get a token
+        const response = await fetch('/api/gpo-frame?token=sample-token');
+        
+        if (response.ok) {
+          // Open in new window
+          window.open('/api/gpo-frame?token=sample-token', '_blank');
+          
+          toast({
+            title: "Pagamento iniciado",
+            description: "Uma nova janela foi aberta para completar o pagamento.",
+          });
+        } else {
+          throw new Error('Falha ao iniciar pagamento');
+        }
+      } else {
+        // Bank transfer option
+        navigate('/pagamento-processo');
+      }
+    } catch (error) {
       toast({
-        title: "Processando pagamento",
-        description: "Clique em 'Processar Pagamento' para abrir a janela de pagamento.",
+        title: "Erro",
+        description: "Houve um problema ao processar seu pagamento. Tente novamente.",
+        variant: "destructive"
       });
-    } else {
-      navigate('/pagamento-processo');
+      console.error("Payment error:", error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -63,7 +86,7 @@ const PaymentPage = () => {
                         </p>
                       </div>
                       <span className="font-medium">
-                        {(item.price * item.quantity).toLocaleString('pt-AO')} Kz
+                        {formatPrice(item.price * item.quantity)}
                       </span>
                     </div>
                   ))}
@@ -72,7 +95,7 @@ const PaymentPage = () => {
                   <div className="w-full flex justify-between">
                     <span className="font-bold">Total</span>
                     <span className="font-bold text-darkblue">
-                      {getTotalPrice().toLocaleString('pt-AO')} Kz
+                      {formatPrice(getTotalPrice())}
                     </span>
                   </div>
                 </CardFooter>
@@ -134,10 +157,13 @@ const PaymentPage = () => {
                           </p>
                         </div>
                         
-                        <PaymentIntegration 
-                          reference={`ORDER-${Date.now()}`}
-                          amount={getTotalPrice()}
-                        />
+                        <Button 
+                          className="w-full bg-darkblue hover:bg-blue-800 transition-all duration-300 transform hover:scale-[1.02]"
+                          onClick={handleProcessPayment}
+                          disabled={isProcessing}
+                        >
+                          {isProcessing ? 'Processando...' : 'Processar Pagamento'}
+                        </Button>
                       </div>
                     )}
                     
@@ -156,7 +182,8 @@ const PaymentPage = () => {
                         
                         <Button 
                           className="w-full bg-darkblue hover:bg-blue-800 transition-all duration-300 transform hover:scale-[1.02]"
-                          onClick={handleProceedToPayment}
+                          onClick={handleProcessPayment}
+                          disabled={isProcessing}
                         >
                           Continuar
                         </Button>

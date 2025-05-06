@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { formatPrice } from '@/utils/formatters';
 
 /**
  * Card de plano individual.
@@ -78,8 +79,8 @@ const PlanCard = ({ plan }: PlanProps) => {
         </CardDescription>
         <div className="mt-4">
           <div className="flex items-baseline">
-            <span className="text-3xl font-bold text-darkblue">{plan.price.toLocaleString('pt-AO')}</span>
-            <span className="ml-1 text-sm text-gray-500">Kz / usuário</span>
+            <span className="text-3xl font-bold text-darkblue">{formatPrice(plan.price)}</span>
+            <span className="ml-1 text-sm text-gray-500">/ usuário</span>
           </div>
         </div>
       </CardHeader>
@@ -112,7 +113,7 @@ const PlanCard = ({ plan }: PlanProps) => {
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium text-gray-600">Total:</span>
             <span className="text-lg font-bold text-darkblue">
-              {(plan.price * users).toLocaleString('pt-AO')} Kz
+              {formatPrice(plan.price * users)}
             </span>
           </div>
           <Button

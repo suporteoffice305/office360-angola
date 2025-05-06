@@ -3,6 +3,7 @@ import React from 'react';
 import { FileText, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { formatPrice } from '@/utils/formatters';
 
 interface Product {
   id: string;
@@ -74,7 +75,7 @@ const ProductSection = () => {
                   <h3 className="text-xl font-semibold text-darkblue ml-2">{product.name}</h3>
                 </div>
                 <p className="text-gray-600 mb-2">{product.description}</p>
-                <p className="text-darkblue font-bold mb-6">A partir de {product.basePrice.toLocaleString('pt-AO')} Kz</p>
+                <p className="text-darkblue font-bold mb-6">A partir de {formatPrice(product.basePrice)}</p>
                 <Button variant="outline" className="border-darkblue text-darkblue hover:bg-darkblue hover:text-white w-full" asChild>
                   <Link to={`/produto/${product.id}`}>Comprar Agora</Link>
                 </Button>

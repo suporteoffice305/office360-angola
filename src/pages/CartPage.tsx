@@ -4,6 +4,7 @@ import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { formatPrice } from '@/utils/formatters';
 
 const CartPage = () => {
   const { items, removeFromCart, updateQuantity, getTotalPrice } = useCart();
@@ -56,7 +57,7 @@ const CartPage = () => {
                       </div>
                       <div className="flex flex-col items-end">
                         <span className="font-bold text-lg text-darkblue">
-                          {(item.price * item.quantity).toLocaleString('pt-AO')} Kz
+                          {formatPrice(item.price * item.quantity)}
                         </span>
                         <button
                           onClick={() => removeFromCart(item.id)}
@@ -74,7 +75,7 @@ const CartPage = () => {
                   <div className="flex justify-between items-center mb-6">
                     <span className="text-lg font-medium">Total</span>
                     <span className="text-2xl font-bold text-darkblue">
-                      {getTotalPrice().toLocaleString('pt-AO')} Kz
+                      {formatPrice(getTotalPrice())}
                     </span>
                   </div>
                   
